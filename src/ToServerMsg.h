@@ -12,11 +12,11 @@ namespace DsprMessage
     {
     public:
 
-        ToServerMsg();
+        ToServerMsg(){};
 
         //Serialization
-        ToServerMsg(char* fromString);
-        char* Serialize();
+        ToServerMsg(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -39,20 +39,20 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class ChatSendMsgV1
+    class ChatSendServerMsgV1
     {
     public:
 
-        ChatSendMsgV1();
+        ChatSendServerMsgV1();
 
         //Serialization
-        ChatSendMsgV1(char* fromString);
-        char* Serialize();
+        ChatSendServerMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -63,7 +63,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -75,8 +75,8 @@ namespace DsprMessage
         UnitOrderMsgV1();
 
         //Serialization
-        UnitOrderMsgV1(char* fromString);
-        char* Serialize();
+        UnitOrderMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -93,6 +93,6 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 }

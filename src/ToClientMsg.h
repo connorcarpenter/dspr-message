@@ -15,8 +15,8 @@ namespace DsprMessage
         ToClientMsg();
 
         //Serialization
-        ToClientMsg(char* fromString);
-        char* Serialize();
+        explicit ToClientMsg(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -37,27 +37,30 @@ namespace DsprMessage
             UnitCreate = 7,
             UnitUpdate = 8,
             UnitDelete = 9,
+            StandardMessage = 10
         };
         _soloByte msgType = _soloByte(VariableName::MsgType);
 
         _bytes msgBytes = _bytes(VariableName::MsgBytes);
 
+        static bool Equals(ToClientMsg *pMsg, ToClientMsg *pClientMsg);
+
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class ChatSendMsgV1
+    class ChatSendClientMsgV1
     {
     public:
 
-        ChatSendMsgV1();
+        ChatSendClientMsgV1();
 
         //Serialization
-        ChatSendMsgV1(char* fromString);
-        char* Serialize();
+        ChatSendClientMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -71,7 +74,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -83,8 +86,8 @@ namespace DsprMessage
         EconomyUpdateMsgV1();
 
         //Serialization
-        EconomyUpdateMsgV1(char* fromString);
-        char* Serialize();
+        explicit EconomyUpdateMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -101,7 +104,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -113,8 +116,8 @@ namespace DsprMessage
         TribeSetMsgV1();
 
         //Serialization
-        TribeSetMsgV1(char* fromString);
-        char* Serialize();
+        TribeSetMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -125,7 +128,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -137,8 +140,8 @@ namespace DsprMessage
         TileCreateMsgV1();
 
         //Serialization
-        TileCreateMsgV1(char* fromString);
-        char* Serialize();
+        TileCreateMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -153,7 +156,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -165,8 +168,8 @@ namespace DsprMessage
         GridCreateMsgV1();
 
         //Serialization
-        GridCreateMsgV1(char* fromString);
-        char* Serialize();
+        GridCreateMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -179,7 +182,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -191,8 +194,8 @@ namespace DsprMessage
         ItemCreateMsgV1();
 
         //Serialization
-        ItemCreateMsgV1(char* fromString);
-        char* Serialize();
+        ItemCreateMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -209,7 +212,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -221,8 +224,8 @@ namespace DsprMessage
         ItemDeleteMsgV1();
 
         //Serialization
-        ItemDeleteMsgV1(char* fromString);
-        char* Serialize();
+        ItemDeleteMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -233,7 +236,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -245,8 +248,8 @@ namespace DsprMessage
         UnitCreateMsgV1();
 
         //Serialization
-        UnitCreateMsgV1(char* fromString);
-        char* Serialize();
+        UnitCreateMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -265,7 +268,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -277,8 +280,8 @@ namespace DsprMessage
         ConstructionQueueMsgV1();
 
         //Serialization
-        ConstructionQueueMsgV1(char* fromString);
-        char* Serialize();
+        ConstructionQueueMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -291,7 +294,7 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -303,8 +306,8 @@ namespace DsprMessage
         UnitUpdateMsgV1();
 
         //Serialization
-        UnitUpdateMsgV1(char* fromString);
-        char* Serialize();
+        UnitUpdateMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -323,21 +326,23 @@ namespace DsprMessage
             Inventory = 12,
         };
         _soloByte id = _soloByte(VariableName::Id);
+        _pair nextPosition = _pair(VariableName::NextPosition, _pair::DataType::DuoByte, _pair::DataType::DuoByte);
+        _pair moveTarget = _pair(VariableName::MoveTarget, _pair::DataType::DuoByte, _pair::DataType::DuoByte);
+        _pair animationState = _pair(VariableName::AnimationState, _pair::DataType::SoloByte, _pair::DataType::SoloByte);
+        _duoByte health = _duoByte(VariableName::Health);
         _soloByte bleed = _soloByte(VariableName::Bleed);
         _soloByte targetUnitId = _soloByte(VariableName::TargetUnitId);
-        _soloByte rallyUnitId = _soloByte(VariableName::RallyUnitId);
-        _duoByte health = _duoByte(VariableName::Health);
-        _bytes inventory = _bytes(VariableName::Inventory);
+        _pair gatherYield = _pair(VariableName::GatherYield, _pair::DataType::SoloByte, _pair::DataType::DuoByte);
         _bytes constructionQueue = _bytes(VariableName::ConstructionQueue);
-        _pair<_duoByte,_duoByte> nextPosition = _pair<_duoByte,_duoByte>(VariableName::NextPosition);
-        _pair<_duoByte,_duoByte> moveTarget = _pair<_duoByte,_duoByte>(VariableName::MoveTarget);
-        _pair<_duoByte,_duoByte> rallyPoint = _pair<_duoByte,_duoByte>(VariableName::RallyPoint);
-        _pair<_soloByte,_soloByte> animationState = _pair<_soloByte,_soloByte>(VariableName::AnimationState);
-        _pair<_soloByte,_duoByte> gatherYield = _pair<_soloByte,_duoByte>(VariableName::GatherYield);
+        _pair rallyPoint = _pair(VariableName::RallyPoint, _pair::DataType::DuoByte, _pair::DataType::DuoByte);
+        _soloByte rallyUnitId = _soloByte(VariableName::RallyUnitId);
+        _bytes inventory = _bytes(VariableName::Inventory);
+
+        static bool Equals(UnitUpdateMsgV1 *a, UnitUpdateMsgV1 *b);
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -349,8 +354,8 @@ namespace DsprMessage
         UnitDeleteMsgV1();
 
         //Serialization
-        UnitDeleteMsgV1(char* fromString);
-        char* Serialize();
+        UnitDeleteMsgV1(_cstr fromString);
+        _cstr Serialize();
 
         //Variables
         enum VariableName
@@ -363,6 +368,6 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(char* fromString);
+        void Deserialize(_cstr fromString);
     };
 }
