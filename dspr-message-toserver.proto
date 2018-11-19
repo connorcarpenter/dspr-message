@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package dspr-message.toserver;
+
+message SuperMsgV1
+{
+    enum MessageType
+    {
+        StartGame = 0;
+        UnitOrder = 1;
+        ChatSend = 2;
+    }
+
+    string authToken = 1;
+    MessageType msgType = 2;
+    bytes msgBytes = 3;
+}
+
+message ChatSendMsgV1
+{
+    string chatMsg = 1;
+}
+
+message Point
+{
+    uint32 x = 1;
+    uint32 y = 2;
+}
+
+message UnitOrderMsgV1
+{
+    repeated uint32 unitId = 1;
+    uint32 orderIndex = 2;
+    repeated uint32 otherNumbers = 3;
+}
