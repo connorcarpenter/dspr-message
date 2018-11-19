@@ -1,8 +1,5 @@
-syntax = "proto3";
 
-package dsprmsg.toserver;
-
-message SuperMsgV1
+message ToServerMsg
 {
     enum MessageType
     {
@@ -19,12 +16,6 @@ message SuperMsgV1
 message ChatSendMsgV1
 {
     string chatMsg = 1;
-}
-
-message Point
-{
-    uint32 x = 1;
-    uint32 y = 2;
 }
 
 message UnitOrderMsgV1
