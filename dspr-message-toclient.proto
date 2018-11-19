@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package dspr-message.toclient;
+
+message SuperMsgV1
+{
+    enum MessageType
+    {
+        ChatSend = 0;
+        EconomyUpdate = 1;
+        TribeSet = 2;
+        TileCreate = 3;
+        GridCreate = 4;
+        ItemCreate = 5;
+        ItemDelete = 6;
+        UnitCreate = 7;
+        UnitUpdate = 8;
+        UnitDelete = 9;
+    }
+
+    MessageType msgType = 1;
+    bytes msgBytes = 2;
+}
+
+message Point
+{
+    uint32 x = 1;
+    uint32 y = 2;
+}
+
+message ChatSendMsgV1
+{
+    uint32 tribeIndex = 1;
+    string chatMsg = 2;
+}
+
+message EconomyUpdateMsgV1
+{
+    uint32 pop = 1;
+    uint32 popMax = 2;
+    uint32 mana = 3;
+}
+
+message TribeSetMsgV1
+{
+    uint32 tribeIndex = 1;
+}
+
+message TileCreateMsgV1
+{
+    uint32 x = 1;
+    uint32 y = 2;
+    uint32 frame = 3;
+}
+
+message GridCreateMsgV1
+{
+    uint32 width = 1;
+    uint32 height = 2;
+}
+
+message ItemCreateMsgV1
+{
+    uint32 id = 1;
+    uint32 x = 2;
+    uint32 y = 2;
+    uint32 templateIndex = 2;
+}
+
+message ItemDeleteMsgV1
+{
+    uint32 id = 1;
+}
+
+message UnitCreateMsgV1
+{
+    uint32 id = 1;
+    uint32 x = 2;
+    uint32 y = 3;
+    uint32 tribeIndex = 4;
+    uint32 templateIndex = 5;
+}
+
+message ConstructionQueueMsgV1
+{
+    uint32 buildTime = 1;
+    repeated uint32 queue = 2;
+}
+
+message UnitUpdateMsgV1
+{
+    uint32 id = 1;
+    Point nextPosition = 2;
+    Point moveTarget = 3;
+    Point animationState = 4;
+    uint32 health = 5;
+    bool bleed = 6;
+    uint32 targetUnitId = 7;
+    Point gatherYield = 8;
+    ConstructionQueueMsgV1 constructionQueue = 9;
+    Point rallyPoint = 10;
+    uint32 rallyUnitId = 11;
+    repeated uint32 inventory = 12;
+}
+
+message UnitDeleteMsgV1
+{
+    uint32 id = 1;
+    bool dead = 2;
+}
