@@ -6,14 +6,13 @@
 
 namespace DsprMessage
 {
-    class ToServerMsg {
+    class ToClientMsg {
     public:
-        ToServerMsg();
-        ToServerMsg(char* fromString);
+        ToClientMsg();
+        ToClientMsg(char* fromString);
         char* Serialize();
 
     private:
         void Deserialize(char* fromString);
-
     };
 }
