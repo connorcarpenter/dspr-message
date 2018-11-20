@@ -1,9 +1,9 @@
 #include <vector>
 #include "ToClientMsg.h"
+#include <string>
 
 namespace DsprMessage
 {
-
     ToClientMsg::ToClientMsg() {
 
     }
@@ -13,7 +13,7 @@ namespace DsprMessage
     }
 
     _cstr ToClientMsg::Serialize() {
-        std::vector<char>* charVector = new std::vector<char>();
+        _charVector* charVector = new _charVector();
         this->msgType.serialize(charVector);
         this->msgBytes.serialize(charVector);
 
@@ -24,7 +24,7 @@ namespace DsprMessage
         int index = 0;
         while(index < fromString.number)
         {
-            char name = fromString.getDs(index);
+            unsigned char name = fromString.getDs(index);
             switch(name)
             {
                 case VariableName::MsgType:
@@ -207,7 +207,7 @@ namespace DsprMessage
     }
 
     _cstr ConstructionQueueMsgV1::Serialize() {
-        std::vector<char>* charVector = new std::vector<char>();
+        _charVector* charVector = new _charVector();
         this->buildTime.serialize(charVector);
         this->queue.serialize(charVector);
 
@@ -243,7 +243,7 @@ namespace DsprMessage
     }
 
     _cstr UnitUpdateMsgV1::Serialize() {
-        std::vector<char>* charVector = new std::vector<char>();
+        _charVector* charVector = new _charVector();
         this->id.serialize(charVector);
         this->nextPosition.serialize(charVector);
         this->moveTarget.serialize(charVector);
@@ -333,6 +333,26 @@ namespace DsprMessage
         if (!DsprMessage::_bytes::Equals(a->inventory, b->inventory))
             return false;
         return true;
+    }
+
+    _cstr UnitUpdateMsgV1::SerializeFinal() {
+        auto serializedUnitUpdateMsg = this->Serialize();
+        DsprMessage::ToClientMsg* clientMsg = new DsprMessage::ToClientMsg();
+        clientMsg->msgType.set(DsprMessage::ToClientMsg::MessageType::UnitUpdate);
+        clientMsg->msgBytes.set(serializedUnitUpdateMsg);
+        auto serializedClientMsg = clientMsg->Serialize();
+
+        //and, quickly test it comin back out again
+        ////TODO: REMOVE THIS FOR PRODUCTION!!!!
+        DsprMessage::ToClientMsg* testMsg = new DsprMessage::ToClientMsg(serializedClientMsg);
+
+        if (!DsprMessage::ToClientMsg::Equals(clientMsg, testMsg))
+        {
+            int i = 12; //:(
+        }
+        ////TODO: REMOVE THIS FOR PRODUCTION!!!!
+
+        return serializedClientMsg;
     }
 
     ////////////////////////////////////////////////////////

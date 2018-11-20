@@ -5,6 +5,7 @@
 //
 
 #include "DataTypes.h"
+#include <string>
 
 namespace DsprMessage
 {
@@ -339,6 +340,8 @@ namespace DsprMessage
         _bytes inventory = _bytes(VariableName::Inventory);
 
         static bool Equals(UnitUpdateMsgV1 *a, UnitUpdateMsgV1 *b);
+
+        _cstr SerializeFinal();
 
     private:
 
