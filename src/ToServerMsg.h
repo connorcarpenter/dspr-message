@@ -25,7 +25,7 @@ namespace DsprMessage
             MsgType = 2,
             MsgBytes = 3,
         };
-        _bytes authToken = _bytes(VariableName::AuthToken);
+        _array authToken = _array(VariableName::AuthToken);
 
         enum MessageType
         {
@@ -33,9 +33,9 @@ namespace DsprMessage
             UnitOrder = 2,
             ChatSend = 3,
         };
-        _soloByte msgType = _soloByte(VariableName::MsgType);
+        _number msgType = _number(VariableName::MsgType);
 
-        _bytes msgBytes = _bytes(VariableName::MsgBytes);
+        _array msgBytes = _array(VariableName::MsgBytes);
 
     private:
 
@@ -59,7 +59,7 @@ namespace DsprMessage
         {
             ChatMessage = 1,
         };
-        _bytes chatMsg = _bytes(VariableName::ChatMessage);
+        _array chatMsg = _array(VariableName::ChatMessage);
 
     private:
 
@@ -85,11 +85,11 @@ namespace DsprMessage
             OrderIndex = 2,
             OtherNumbers = 3,
         };
-        _bytes unitIds = _bytes(VariableName::UnitIds);
+        _array unitIds = _array(VariableName::UnitIds);
 
-        _soloByte orderIndex = _soloByte(VariableName::OrderIndex);
+        _number orderIndex = _number(VariableName::OrderIndex);
 
-        _bytes otherNumbers = _bytes(VariableName::OtherNumbers);
+        _array otherNumbers = _array(VariableName::OtherNumbers);
 
     private:
 

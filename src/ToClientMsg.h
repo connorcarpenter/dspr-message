@@ -24,6 +24,7 @@ namespace DsprMessage
         {
             MsgType = 1,
             MsgBytes = 2,
+            VariableNameMaxValue = 3,
         };
 
         enum MessageType
@@ -38,11 +39,12 @@ namespace DsprMessage
             UnitCreate = 7,
             UnitUpdate = 8,
             UnitDelete = 9,
-            StandardMessage = 10
+            StandardMessage = 10,
+            MessageTypeMaxValue = 11,
         };
-        _soloByte msgType = _soloByte(VariableName::MsgType);
+        _number msgType = _number(VariableName::MsgType);
 
-        _bytes msgBytes = _bytes(VariableName::MsgBytes);
+        _array msgBytes = _array(VariableName::MsgBytes);
 
         static bool Equals(ToClientMsg *pMsg, ToClientMsg *pClientMsg);
 
@@ -69,9 +71,9 @@ namespace DsprMessage
             ChatMessage = 1,
             TribeIndex = 2,
         };
-        _bytes chatMsg = _bytes(VariableName::ChatMessage);
+        _array chatMsg = _array(VariableName::ChatMessage);
 
-        _soloByte tribeIndex = _soloByte(VariableName::TribeIndex);
+        _number tribeIndex = _number(VariableName::TribeIndex);
 
     private:
 
@@ -97,11 +99,11 @@ namespace DsprMessage
             PopMax = 2,
             Mana = 3,
         };
-        _soloByte pop = _soloByte(VariableName::Pop);
+        _number pop = _number(VariableName::Pop);
 
-        _soloByte popMax = _soloByte(VariableName::PopMax);
+        _number popMax = _number(VariableName::PopMax);
 
-        _duoByte mana = _duoByte(VariableName::Mana);
+        _number mana = _number(VariableName::Mana);
 
     private:
 
@@ -125,7 +127,7 @@ namespace DsprMessage
         {
             TribeIndex = 1,
         };
-        _soloByte tribeIndex = _soloByte(VariableName::TribeIndex);
+        _number tribeIndex = _number(VariableName::TribeIndex);
 
     private:
 
@@ -151,9 +153,9 @@ namespace DsprMessage
             Y = 2,
             Frame = 3,
         };
-        _soloByte frame = _soloByte(VariableName::Frame);
-        _duoByte x = _duoByte(VariableName::X);
-        _duoByte y = _duoByte(VariableName::Y);
+        _number frame = _number(VariableName::Frame);
+        _number x = _number(VariableName::X);
+        _number y = _number(VariableName::Y);
 
     private:
 
@@ -178,8 +180,8 @@ namespace DsprMessage
             Width = 1,
             Height = 2,
         };
-        _duoByte width = _duoByte(VariableName::Width);
-        _duoByte height = _duoByte(VariableName::Height);
+        _number width = _number(VariableName::Width);
+        _number height = _number(VariableName::Height);
 
     private:
 
@@ -206,10 +208,10 @@ namespace DsprMessage
             Y = 3,
             TemplateIndex = 4,
         };
-        _duoByte x = _duoByte(VariableName::X);
-        _duoByte y = _duoByte(VariableName::Y);
-        _soloByte id = _soloByte(VariableName::Id);
-        _soloByte templateIndex = _soloByte(VariableName::TemplateIndex);
+        _number x = _number(VariableName::X);
+        _number y = _number(VariableName::Y);
+        _number id = _number(VariableName::Id);
+        _number templateIndex = _number(VariableName::TemplateIndex);
 
     private:
 
@@ -233,7 +235,7 @@ namespace DsprMessage
         {
             Id = 1,
         };
-        _soloByte id = _soloByte(VariableName::Id);
+        _number id = _number(VariableName::Id);
 
     private:
 
@@ -261,11 +263,11 @@ namespace DsprMessage
             TemplateIndex = 4,
             TribeIndex = 5,
         };
-        _soloByte id = _soloByte(VariableName::Id);
-        _soloByte templateIndex = _soloByte(VariableName::TemplateIndex);
-        _soloByte tribeIndex = _soloByte(VariableName::TribeIndex);
-        _duoByte x = _duoByte(VariableName::X);
-        _duoByte y = _duoByte(VariableName::Y);
+        _number id = _number(VariableName::Id);
+        _number templateIndex = _number(VariableName::TemplateIndex);
+        _number tribeIndex = _number(VariableName::TribeIndex);
+        _number x = _number(VariableName::X);
+        _number y = _number(VariableName::Y);
 
     private:
 
@@ -290,8 +292,8 @@ namespace DsprMessage
             BuildTime = 1,
             Queue = 2,
         };
-        _soloByte buildTime = _soloByte(VariableName::BuildTime);
-        _bytes queue = _bytes(VariableName::Queue);
+        _number buildTime = _number(VariableName::BuildTime);
+        _array queue = _array(VariableName::Queue);
 
     private:
 
@@ -326,18 +328,18 @@ namespace DsprMessage
             RallyUnitId = 11,
             Inventory = 12,
         };
-        _soloByte id = _soloByte(VariableName::Id);
-        _pair nextPosition = _pair(VariableName::NextPosition, _pair::DataType::DuoByte, _pair::DataType::DuoByte);
-        _pair moveTarget = _pair(VariableName::MoveTarget, _pair::DataType::DuoByte, _pair::DataType::DuoByte);
-        _pair animationState = _pair(VariableName::AnimationState, _pair::DataType::SoloByte, _pair::DataType::SoloByte);
-        _duoByte health = _duoByte(VariableName::Health);
-        _soloByte bleed = _soloByte(VariableName::Bleed);
-        _soloByte targetUnitId = _soloByte(VariableName::TargetUnitId);
-        _pair gatherYield = _pair(VariableName::GatherYield, _pair::DataType::SoloByte, _pair::DataType::DuoByte);
-        _bytes constructionQueue = _bytes(VariableName::ConstructionQueue);
-        _pair rallyPoint = _pair(VariableName::RallyPoint, _pair::DataType::DuoByte, _pair::DataType::DuoByte);
-        _soloByte rallyUnitId = _soloByte(VariableName::RallyUnitId);
-        _bytes inventory = _bytes(VariableName::Inventory);
+        _number id = _number(VariableName::Id);
+        _array nextPosition = _array(VariableName::NextPosition);
+        _array moveTarget = _array(VariableName::MoveTarget);
+        _array animationState = _array(VariableName::AnimationState);
+        _number health = _number(VariableName::Health);
+        _number bleed = _number(VariableName::Bleed);
+        _number targetUnitId = _number(VariableName::TargetUnitId);
+        _array gatherYield = _array(VariableName::GatherYield);
+        _array constructionQueue = _array(VariableName::ConstructionQueue);
+        _array rallyPoint = _array(VariableName::RallyPoint);
+        _number rallyUnitId = _number(VariableName::RallyUnitId);
+        _array inventory = _array(VariableName::Inventory);
 
         static bool Equals(UnitUpdateMsgV1 *a, UnitUpdateMsgV1 *b);
 
@@ -366,8 +368,8 @@ namespace DsprMessage
             Id = 1,
             Dead = 2,
         };
-        _soloByte id = _soloByte(VariableName::Id);
-        _soloByte dead = _soloByte(VariableName::Dead);
+        _number id = _number(VariableName::Id);
+        _number dead = _number(VariableName::Dead);
 
     private:
 

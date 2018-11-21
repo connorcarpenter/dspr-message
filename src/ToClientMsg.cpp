@@ -1,6 +1,7 @@
 #include <vector>
 #include "ToClientMsg.h"
 #include <string>
+#include <assert.h>
 
 namespace DsprMessage
 {
@@ -44,8 +45,8 @@ namespace DsprMessage
         {
             return false;
         }
-        UnitUpdateMsgV1* aUU = new UnitUpdateMsgV1(a->msgBytes.get());
-        UnitUpdateMsgV1* bUU = new UnitUpdateMsgV1(b->msgBytes.get());
+        UnitUpdateMsgV1* aUU = new UnitUpdateMsgV1(a->msgBytes.getCstr());
+        UnitUpdateMsgV1* bUU = new UnitUpdateMsgV1(b->msgBytes.getCstr());
         if (!UnitUpdateMsgV1::Equals(aUU, bUU))
         {
             return false;
@@ -310,36 +311,37 @@ namespace DsprMessage
     }
 
     bool UnitUpdateMsgV1::Equals(UnitUpdateMsgV1 *a, UnitUpdateMsgV1 *b) {
-        if (!DsprMessage::_pair::Equals(a->nextPosition, b->nextPosition))
+        if (!DsprMessage::_array::Equals(a->nextPosition, b->nextPosition))
             return false;
-        if (!DsprMessage::_pair::Equals(a->moveTarget, b->moveTarget))
+        if (!DsprMessage::_array::Equals(a->moveTarget, b->moveTarget))
             return false;
-        if (!DsprMessage::_pair::Equals(a->animationState, b->animationState))
+        if (!DsprMessage::_array::Equals(a->animationState, b->animationState))
             return false;
-        if (!DsprMessage::_duoByte::Equals(a->health, b->health))
+        if (!DsprMessage::_number::Equals(a->health, b->health))
             return false;
-        if (!DsprMessage::_soloByte::Equals(a->bleed, b->bleed))
+        if (!DsprMessage::_number::Equals(a->bleed, b->bleed))
             return false;
-        if (!DsprMessage::_soloByte::Equals(a->targetUnitId, b->targetUnitId))
+        if (!DsprMessage::_number::Equals(a->targetUnitId, b->targetUnitId))
             return false;
-        if (!DsprMessage::_pair::Equals(a->gatherYield, b->gatherYield))
+        if (!DsprMessage::_array::Equals(a->gatherYield, b->gatherYield))
             return false;
-        if (!DsprMessage::_bytes::Equals(a->constructionQueue, b->constructionQueue))
+        if (!DsprMessage::_array::Equals(a->constructionQueue, b->constructionQueue))
             return false;
-        if (!DsprMessage::_pair::Equals(a->rallyPoint, b->rallyPoint))
+        if (!DsprMessage::_array::Equals(a->rallyPoint, b->rallyPoint))
             return false;
-        if (!DsprMessage::_soloByte::Equals(a->rallyUnitId, b->rallyUnitId))
+        if (!DsprMessage::_number::Equals(a->rallyUnitId, b->rallyUnitId))
             return false;
-        if (!DsprMessage::_bytes::Equals(a->inventory, b->inventory))
+        if (!DsprMessage::_array::Equals(a->inventory, b->inventory))
             return false;
         return true;
     }
 
     _cstr UnitUpdateMsgV1::SerializeFinal() {
-        auto serializedUnitUpdateMsg = this->Serialize();
+        _cstr serializedUnitUpdateMsg = this->Serialize();
         DsprMessage::ToClientMsg* clientMsg = new DsprMessage::ToClientMsg();
-        clientMsg->msgType.set(DsprMessage::ToClientMsg::MessageType::UnitUpdate);
-        clientMsg->msgBytes.set(serializedUnitUpdateMsg);
+        assert(DsprMessage::ToClientMsg::MessageType::MessageTypeMaxValue < 256);
+        clientMsg->msgType.set((unsigned char) DsprMessage::ToClientMsg::MessageType::UnitUpdate);
+        clientMsg->msgBytes.setCstr(serializedUnitUpdateMsg);
         auto serializedClientMsg = clientMsg->Serialize();
 
         //and, quickly test it comin back out again

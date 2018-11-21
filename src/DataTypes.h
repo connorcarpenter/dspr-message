@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <assert.h>
 
 namespace DsprMessage
 {
@@ -17,7 +18,24 @@ namespace DsprMessage
         }
         int size() {return theVector->size();}
         unsigned char at(int i) {return theVector->at(i);}
-        void push_back(unsigned char c) {theVector->push_back(c);}
+
+        void push_back(unsigned char c)
+        {
+            theVector->push_back(c);
+        }
+        void push_back(unsigned int i)
+        {
+            assert(i < 255);
+            theVector->push_back((unsigned char) i);
+        }
+
+        void push_back(long unsigned int i)
+        {
+            assert(i < 255);
+            theVector->push_back((unsigned char) i);
+        }
+        template <class T>
+        void push_back(T) = delete; //this enforces that no implicit casts happen
     private:
         std::vector<unsigned char>* theVector = nullptr;
     };
@@ -60,151 +78,49 @@ namespace DsprMessage
         unsigned char *innerCstr = nullptr;
     };
 
-    class _bytes
+    class _number
     {
     public:
-        _bytes(unsigned char name)
+        _number(unsigned char name)
         {
             this->name = name;
         }
 
-        ~_bytes()
+        void set(unsigned char value)
         {
-            if (this->dealloc)
-                delete [] this->array;
-        }
-
-        void initBytes(unsigned char numBytes)
-        {
-            this->numBytes = numBytes;
-            this->array = new unsigned char[numBytes];
-            this->dealloc = true;
-        }
-
-        void setArray(unsigned int index, unsigned char value)
-        {
-            this->array[index] = value;
-            this->wasSet = true;
-        }
-
-        unsigned char getArray(unsigned int index)
-        {
-            return this->array[index];
-        }
-
-        void set(_cstr cstr) {
-            this->numBytes = cstr.number;
-            this->array = cstr.innerCstr;
-            this->wasSet = true;
-        }
-
-        _cstr get()
-        {
-            return _cstr(array, numBytes);
-        }
-
-        unsigned char* array = nullptr;
-        unsigned char numBytes = 0;
-
-        bool wasSet = false;
-
-        void serialize(_charVector* charVector) {
-            if (!wasSet) return;
-            if (this->numBytes == 0)return;
-            charVector->push_back(this->name);
-            charVector->push_back(this->numBytes);
-            for(int i=0;i<this->numBytes;i++)
-            {
-                charVector->push_back(this->array[i]);
-            }
-        }
-
-        int deserialize(int index, _cstr cstr) {
-            this->initBytes(cstr.getDs(index));
-            index++;
-
-            for(int i=0;i<this->numBytes;i++)
-                this->setArray(i, cstr.getDs(index+i));
-
-            index += this->numBytes;
-            return index;
-        }
-
-        static bool Equals(_bytes a, _bytes b) {
-            if (a.numBytes != b.numBytes)
-            {
-                return false;
-            }
-            for(int i=0;i<a.numBytes;i++)
-                if (a.getArray(i) != b.getArray(i))
-                {
-                    return false;
-                }
-            return true;
-        }
-
-    private:
-        unsigned char name;
-        bool dealloc = false;
-    };
-
-    class _soloByte
-    {
-    public:
-        _soloByte(unsigned char name)
-        {
-            this->name = name;
-        }
-
-        explicit void set(unsigned char value)
-        {
+            this->dataSize = 1;
             this->value = value;
             this->wasSet = true;
-        }
-        unsigned int get()
-        {
-            return this->value;
-        }
-
-        void serialize(_charVector* charVector)
-        {
-            if (!wasSet) return;
-
-            charVector->push_back(this->name);
-            charVector->push_back(this->value);
-        }
-
-        int deserialize(int index, _cstr cstr) {
-            this->set(cstr.getDs(index));
-            index++;
-            return index;
-        }
-
-        bool wasSet = false;
-
-        static bool Equals(_soloByte a, _soloByte b) {
-            if (a.value != b.value) return false;
-            return true;
-        }
-
-    private:
-        unsigned char name;
-        unsigned char value = 0;
-    };
-
-    class _duoByte
-    {
-    public:
-        _duoByte(unsigned char name)
-        {
-            this->name = name;
         }
 
         void set(unsigned int value)
         {
+            this->dataSize=1;
+            if (value >= 255) this->dataSize+=1;
+            if (value >= 65535) this->dataSize+=1;
+            if (value >= 16777215) {
+                int i = 1/0; // what the heck is this big?
+            }
             this->value = value;
             this->wasSet = true;
         }
+
+        void set(int value)
+        {
+            assert(value>=0);
+            this->set((unsigned int) value);
+        }
+
+        void set(bool value)
+        {
+            this->dataSize=1;
+            this->value = (unsigned char) value;
+            this->wasSet = true;
+        }
+
+        template <class T>
+        void set(T) = delete; //this enforces that no implicit casts happen
+
         unsigned int get()
         {
             return this->value;
@@ -215,26 +131,27 @@ namespace DsprMessage
         void serialize(_charVector* charVector) {
             if (!wasSet) return;
             charVector->push_back(this->name);
-            this->serializeValue(charVector);
+            charVector->push_back(this->dataSize);
+            for (int i=0;i<this->dataSize;i++)
+            {
+                unsigned char c = ((this->value >> (8*i)) & 0xFF);
+                charVector->push_back(c);
+            }
         }
 
         int deserialize(int index, _cstr cstr) {
-            this->deserializeValue(cstr.getDs(index), cstr.getDs(index+1)); index+=2;
+            this->dataSize = cstr.getDs(index);index+=1;
+            unsigned int val = 0;
+            for(int i = 0;i<this->dataSize;i++)
+            {
+                val |= (cstr.getDs(index+i) << (8*i));
+            }
+            index += this->dataSize;
+            this->set(val);
             return index;
         }
 
-        void serializeValue(_charVector* charVector) {
-            unsigned char a = (this->value & 0xFF);
-            unsigned char b = ((this->value >> 8) & 0xFF);
-            charVector->push_back(a);
-            charVector->push_back(b);
-        }
-
-        void deserializeValue(unsigned char a, unsigned char b) {
-            this->set(a | b << 8);
-        }
-
-        static bool Equals(_duoByte a, _duoByte b) {
+        static bool Equals(_number a, _number b) {
             if (a.value != b.value) return false;
             return true;
         }
@@ -242,118 +159,149 @@ namespace DsprMessage
     private:
         unsigned char name;
         unsigned int value = 0;
+        unsigned int dataSize = 0;
     };
 
-    class _pair
+    class _array
     {
     public:
-        enum DataType
-        {
-            SoloByte = 1,
-            DuoByte = 2,
-        };
-        _pair(unsigned char name, _pair::DataType a, _pair::DataType b)
+        _array(unsigned char name)
         {
             this->name = name;
-            this->aType = a;
-            this->bType = b;
         }
 
-        void setA(unsigned int value)
+        ~_array()
         {
-            this->valueA = value;
+            if (this->cstr != nullptr)
+                delete [] this->cstr;
+        }
+
+        void add(unsigned char value)
+        {
+            checkForDataSize(value);
+            this->contents.push_back(value);
             this->wasSet = true;
+            contentsHaveChanged = true;
         }
 
-        void setB(unsigned int value)
+        void add(unsigned int value)
         {
-            this->valueB = value;
+            checkForDataSize(value);
+            this->contents.push_back(value);
             this->wasSet = true;
+            contentsHaveChanged = true;
         }
 
-        unsigned int getA()
+        void add(int value)
         {
-            return this->valueA;
+            assert(value >= 0);
+            this->add((unsigned int) value);
         }
 
-        unsigned int getB()
+        void checkForDataSize(unsigned int value)
         {
-            return this->valueB;
+            unsigned int newDataSize = 1;
+            if (value >= 255) newDataSize+=1;
+            if (value >= 65535) newDataSize+=1;
+            if (value >= 16777215) {
+                int i = 1/0; // what the heck is this big?
+            }
+            if (newDataSize > this->dataSize)
+                this->dataSize = newDataSize;
+        }
+
+        template <class T>
+        void add(T) = delete; //this enforces that no implicit casts happen
+
+        unsigned int get(unsigned int i)
+        {
+            return this->contents.at(i);
         }
 
         bool wasSet = false;
 
-        void serialize(_charVector* charVector)
-        {
+        void serialize(_charVector* charVector) {
             if (!wasSet) return;
             charVector->push_back(this->name);
-
-            charVector->push_back(this->aType);
-            if (aType == SoloByte)
+            charVector->push_back(this->dataSize);
+            charVector->push_back(this->contents.size());
+            for (int j=0;j<this->contents.size();j++)
             {
-                charVector->push_back(this->valueA);
-            }
-            else
-            {
-                _duoByte duoA(0);
-                duoA.set(this->valueA);
-                duoA.serializeValue(charVector);
-            }
-
-            charVector->push_back(this->bType);
-            if (bType == SoloByte)
-            {
-                charVector->push_back(this->valueB);
-            }
-            else
-            {
-                _duoByte duoB(0);
-                duoB.set(this->valueB);
-                duoB.serializeValue(charVector);
+                unsigned int value = this->contents.at(j);
+                for (int i = 0; i < this->dataSize; i++)
+                {
+                    unsigned char c = ((value >> (8 * i)) & 0xFF);
+                    charVector->push_back(c);
+                }
             }
         }
 
         int deserialize(int index, _cstr cstr) {
-            this->wasSet = true;
-            this->aType = static_cast<DataType>(cstr.getDs(index)); index++;
-            if (aType == SoloByte)
+            this->dataSize = cstr.getDs(index);index+=1;
+            unsigned int numberElements = cstr.getDs(index);index+=1;
+            for (int j=0;j<numberElements;j++)
             {
-                this->valueA = cstr.getDs(index); index++;
+                unsigned int val = 0;
+                for (int i = 0; i < this->dataSize; i++)
+                {
+                    val |= (cstr.getDs(index + i) << (8 * i));
+                }
+                index += this->dataSize;
+                this->contents.push_back(val);
             }
-            else
-            {
-                _duoByte duoA(0);
-                duoA.deserializeValue(cstr.getDs(index), cstr.getDs(index+1)); index+=2;
-                this->valueA = duoA.get();
-            }
-
-
-            this->bType = static_cast<DataType>(cstr.getDs(index)); index++;
-            if (bType == SoloByte)
-            {
-                this->valueB = cstr.getDs(index); index++;
-            }
-            else
-            {
-                _duoByte duoB(0);
-                duoB.deserializeValue(cstr.getDs(index), cstr.getDs(index+1)); index+=2;
-                this->valueB = duoB.get();
-            }
-
+            contentsHaveChanged = true;
+            wasSet = true;
             return index;
         }
 
-        static bool Equals(_pair a, _pair b) {
-            if (a.valueA != b.valueA) return false;
-            if (a.valueB != b.valueB) return false;
+        static bool Equals(_array a, _array b) {
+            if (a.dataSize != b.dataSize) return false;
+            if (a.contents.size() != b.contents.size()) return false;
+            for (int i=0;i<a.contents.size();i++)
+            {
+                if (a.contents.at(i) != b.contents.at(i)) return false;
+            }
             return true;
+        }
+
+        _cstr getCstr()
+        {
+            assert(dataSize == 1);
+            if (contentsHaveChanged)
+                updateCstr();
+            return _cstr(cstr, this->contents.size());
+        }
+
+        void setCstr(_cstr cstr)
+        {
+            for (int i=0;i<cstr.number;i++)
+            {
+                this->add(cstr.innerCstr[i]);
+            }
+            this->wasSet = true;
+        }
+
+        void updateCstr(){
+            if (this->cstr != nullptr)
+                delete [] this->cstr;
+            this->cstr = new unsigned char[this->contents.size()];
+            for (int i=0;i<this->contents.size();i++)
+            {
+                cstr[i] = this->contents.at(i);
+            }
+            contentsHaveChanged = false;
+        }
+
+        unsigned int size()
+        {
+            return contents.size();
         }
 
     private:
         unsigned char name;
-        unsigned int valueA = 0;
-        unsigned int valueB = 0;
-        DataType aType;
-        DataType bType;
+        unsigned int dataSize = 1;
+        std::vector<unsigned int> contents;
+        bool contentsHaveChanged = true;
+        unsigned char* cstr = nullptr;
     };
 }
