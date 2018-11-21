@@ -2,9 +2,12 @@
 
 #include <vector>
 #include <assert.h>
+#include "ToClientMsg.h"
 
 namespace DsprMessage
 {
+    const static unsigned int Modifier = 2;
+    const static unsigned int MaxByteValue = 255-Modifier;
     class _charVector
     {
     public:
@@ -25,13 +28,13 @@ namespace DsprMessage
         }
         void push_back(unsigned int i)
         {
-            assert(i < 255);
+            assert(i < DsprMessage::MaxByteValue);
             theVector->push_back((unsigned char) i);
         }
 
         void push_back(long unsigned int i)
         {
-            assert(i < 255);
+            assert(i < DsprMessage::MaxByteValue);
             theVector->push_back((unsigned char) i);
         }
         template <class T>
@@ -59,20 +62,24 @@ namespace DsprMessage
 
         static _cstr fromVector(_charVector* pVector) {
             auto cvSize = pVector->size();
-            auto cstr = new unsigned char[cvSize+1];
+            auto cstr = new unsigned char[cvSize];
             for(int i=0;i<cvSize;i++)
             {
-                cstr[i] = pVector->at(i)+1;
+                cstr[i] = pVector->at(i);
             }
-            cstr[cvSize] = '\0';
             delete pVector;
             return _cstr(cstr, cvSize);
+        }
+
+        static _cstr finalVector(_charVector* pVector) {
+            pVector->push_back((unsigned char) '\1');
+            return fromVector(pVector);
         }
 
         bool dealloc;
 
         unsigned char getDs(unsigned char index) {
-            return this->innerCstr[index]-1;
+            return this->innerCstr[index];
         }
 
         unsigned char *innerCstr = nullptr;

@@ -40,7 +40,8 @@ namespace DsprMessage
             UnitUpdate = 8,
             UnitDelete = 9,
             StandardMessage = 10,
-            MessageTypeMaxValue = 11,
+            AuthGameToken = 11,
+            MessageTypeMaxValue = 12,
         };
         _number msgType = _number(VariableName::MsgType);
 
@@ -48,9 +49,14 @@ namespace DsprMessage
 
         static bool Equals(ToClientMsg *pMsg, ToClientMsg *pClientMsg);
 
+        _cstr Pack();
+        void Unpack(_cstr cstr);
+
     private:
 
         void Deserialize(_cstr fromString);
+
+
     };
 
     /////////////////////////////////////////////////////////////////////////

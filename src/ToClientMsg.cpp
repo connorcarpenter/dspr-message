@@ -10,7 +10,7 @@ namespace DsprMessage
     }
 
     ToClientMsg::ToClientMsg(_cstr fromString) {
-        this->Deserialize(fromString);
+        this->Unpack(fromString);
     }
 
     _cstr ToClientMsg::Serialize() {
@@ -18,13 +18,14 @@ namespace DsprMessage
         this->msgType.serialize(charVector);
         this->msgBytes.serialize(charVector);
 
-        return _cstr::fromVector(charVector);
+        return _cstr::finalVector(charVector);
     }
 
     void ToClientMsg::Deserialize(_cstr fromString) {
         int index = 0;
         while(index < fromString.number)
         {
+            if (fromString.innerCstr[index] == '\1')break;
             unsigned char name = fromString.getDs(index);
             switch(name)
             {
@@ -53,6 +54,23 @@ namespace DsprMessage
         }
         return true;
 
+    }
+
+    _cstr ToClientMsg::Pack() {
+        _cstr cstr = this->Serialize();
+        for (int i=0;i<cstr.number-1;i++)
+        {
+            cstr.innerCstr[i] += DsprMessage::Modifier;
+        }
+        return cstr;
+    }
+
+    void ToClientMsg::Unpack(_cstr cstr) {
+        for (int i=0;i<cstr.number-1;i++)
+        {
+            cstr.innerCstr[i] -= DsprMessage::Modifier;
+        }
+        this->Deserialize(cstr);
     }
 
     ////////////////////////////////////////////////
@@ -339,10 +357,10 @@ namespace DsprMessage
     _cstr UnitUpdateMsgV1::SerializeFinal() {
         _cstr serializedUnitUpdateMsg = this->Serialize();
         DsprMessage::ToClientMsg* clientMsg = new DsprMessage::ToClientMsg();
-        assert(DsprMessage::ToClientMsg::MessageType::MessageTypeMaxValue < 256);
+        assert(DsprMessage::ToClientMsg::MessageType::MessageTypeMaxValue < DsprMessage::MaxByteValue);
         clientMsg->msgType.set((unsigned char) DsprMessage::ToClientMsg::MessageType::UnitUpdate);
         clientMsg->msgBytes.setCstr(serializedUnitUpdateMsg);
-        auto serializedClientMsg = clientMsg->Serialize();
+        auto serializedClientMsg = clientMsg->Pack();
 
         //and, quickly test it comin back out again
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
