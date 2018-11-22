@@ -128,11 +128,34 @@ namespace DsprMessage
     }
 
     std::shared_ptr<DsprMessage::CStr> EconomyUpdateMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->mana.serialize(charVector);
+        this->pop.serialize(charVector);
+        this->popMax.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void EconomyUpdateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::Mana:
+                    index = this->mana.deserialize(index+1, fromString);
+                    break;
+                case VariableName::Pop:
+                    index = this->pop.deserialize(index+1, fromString);
+                    break;
+                case VariableName::PopMax:
+                    index = this->popMax.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////
