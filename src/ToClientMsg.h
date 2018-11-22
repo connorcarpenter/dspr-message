@@ -254,7 +254,7 @@ namespace DsprMessage
 
         //Serialization
         ItemDeleteMsgV1(const Array& fromArray);
-        std::shared_ptr<DsprMessage::CStr> Serialize();
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
 
         //Variables
         enum VariableName

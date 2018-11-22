@@ -293,11 +293,26 @@ namespace DsprMessage
     }
 
     std::shared_ptr<DsprMessage::CStr> ItemDeleteMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->id.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void ItemDeleteMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::Id:
+                    index = this->id.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////
