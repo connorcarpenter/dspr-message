@@ -555,12 +555,12 @@ namespace DsprMessage
 
         //and, quickly test it comin back out again
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
-        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Pack());
-
-        if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
-        {
-            int i = 12; //:(
-        }
+//        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Pack());
+//
+//        if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
+//        {
+//            int i = 12; //:(
+//        }
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
 
         return std::shared_ptr<DsprMessage::ToClientMsg>(clientMsg);

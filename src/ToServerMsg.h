@@ -12,11 +12,11 @@ namespace DsprMessage
     {
     public:
 
-        ToServerMsg(){};
+        ToServerMsg() = default;
 
         //Serialization
-        ToServerMsg(CStr fromString);
-        CStr Serialize();
+        explicit ToServerMsg(std::shared_ptr<CStr> fromString);
+        std::shared_ptr<CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -25,34 +25,50 @@ namespace DsprMessage
             MsgType = 2,
             MsgBytes = 3,
         };
-        Array authToken = Array(VariableName::AuthToken);
+        Array authToken = Array((unsigned char) VariableName::AuthToken);
 
         enum MessageType
         {
             StartGame = 1,
             UnitOrder = 2,
             ChatSend = 3,
+            StandardMessage = 4,
+            MessageTypeMaxValue = 5,
         };
-        Number msgType = Number(VariableName::MsgType);
+        Number msgType = Number((unsigned char) VariableName::MsgType);
 
-        Array msgBytes = Array(VariableName::MsgBytes);
+        Array msgBytes = Array((unsigned char) VariableName::MsgBytes);
+
+        std::shared_ptr<CStr> Pack();
+        void Unpack(std::shared_ptr<CStr> cstr);
 
     private:
 
-        void Deserialize(CStr fromString);
+        void Deserialize(std::shared_ptr<CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class ChatSendServerMsgV1
+
+    class ToServerSubMessage
+    {
+    public:
+        std::shared_ptr<DsprMessage::ToServerMsg> getToServerMessage();
+        virtual std::shared_ptr<DsprMessage::CStr> Serialize() = 0;
+        virtual DsprMessage::ToServerMsg::MessageType getMessageType() = 0;
+    };
+
+    /////////////////////////////////////////////////////////////////////////
+
+    class ChatSendServerMsgV1 : public ToServerSubMessage
     {
     public:
 
-        ChatSendServerMsgV1();
+        ChatSendServerMsgV1() = default;
 
         //Serialization
-        ChatSendServerMsgV1(CStr fromString);
-        CStr Serialize();
+        ChatSendServerMsgV1(const Array& fromArray);
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
 
         //Variables
         enum VariableName
@@ -63,20 +79,22 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(CStr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        virtual DsprMessage::ToServerMsg::MessageType getMessageType() override { return DsprMessage::ToServerMsg::MessageType::ChatSend; }
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class UnitOrderMsgV1
+    class UnitOrderMsgV1 : public ToServerSubMessage
     {
     public:
 
-        UnitOrderMsgV1();
+        UnitOrderMsgV1() = default;
 
         //Serialization
-        UnitOrderMsgV1(CStr fromString);
-        CStr Serialize();
+        UnitOrderMsgV1(const Array& fromArray);
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
 
         //Variables
         enum VariableName
@@ -93,6 +111,8 @@ namespace DsprMessage
 
     private:
 
-        void Deserialize(CStr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        virtual DsprMessage::ToServerMsg::MessageType getMessageType() override { return DsprMessage::ToServerMsg::MessageType::UnitOrder; }
     };
 }
