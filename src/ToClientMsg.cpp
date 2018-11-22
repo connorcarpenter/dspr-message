@@ -85,12 +85,17 @@ namespace DsprMessage
             return false;
         }
 
-        UnitUpdateMsgV1 aUU = UnitUpdateMsgV1(a.msgBytes);
-        UnitUpdateMsgV1 bUU = UnitUpdateMsgV1(b.msgBytes);
-        if (!UnitUpdateMsgV1::Equals(aUU, bUU))
-        {
-            return false;
-        }
+        ///TODO: MAKE THIS WORK FOR ALL TYPES OF MESSAGES!
+
+//        UnitUpdateMsgV1 aUU = UnitUpdateMsgV1(a.msgBytes);
+//        UnitUpdateMsgV1 bUU = UnitUpdateMsgV1(b.msgBytes);
+//        if (!UnitUpdateMsgV1::Equals(aUU, bUU))
+//        {
+//            return false;
+//        }
+
+        ///TODO: MAKE THIS WORK FOR ALL TYPES OF MESSAGES!
+
         return true;
     }
 
@@ -190,11 +195,30 @@ namespace DsprMessage
     }
 
     std::shared_ptr<DsprMessage::CStr> GridCreateMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->width.serialize(charVector);
+        this->height.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void GridCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::Width:
+                    index = this->width.deserialize(index+1, fromString);
+                    break;
+                case VariableName::Height:
+                    index = this->height.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////
