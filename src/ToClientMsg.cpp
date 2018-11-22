@@ -291,11 +291,42 @@ namespace DsprMessage
     }
 
     std::shared_ptr<DsprMessage::CStr> UnitCreateMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->id.serialize(charVector);
+        this->x.serialize(charVector);
+        this->y.serialize(charVector);
+        this->tribeIndex.serialize(charVector);
+        this->templateIndex.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void UnitCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::Id:
+                    index = this->id.deserialize(index+1, fromString);
+                    break;
+                case VariableName::X:
+                    index = this->x.deserialize(index+1, fromString);
+                    break;
+                case VariableName::Y:
+                    index = this->y.deserialize(index+1, fromString);
+                    break;
+                case VariableName::TribeIndex:
+                    index = this->tribeIndex.deserialize(index+1, fromString);
+                    break;
+                case VariableName::TemplateIndex:
+                    index = this->templateIndex.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////
