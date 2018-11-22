@@ -39,9 +39,8 @@ namespace DsprMessage
             UnitCreate = 8,
             UnitUpdate = 9,
             UnitDelete = 10,
-            StandardMessage = 11,
-            AuthGameToken = 12,
-            MessageTypeMaxValue = 13,
+            AuthGameToken = 11,
+            MessageTypeMaxValue = 12,
         };
 
         Number msgType = Number((unsigned char) VariableName::MsgType);
