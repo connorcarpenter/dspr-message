@@ -140,11 +140,26 @@ namespace DsprMessage
     }
 
     std::shared_ptr<DsprMessage::CStr> TribeSetMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->tribeIndex.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void TribeSetMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::TribeIndex:
+                    index = this->tribeIndex.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////
@@ -375,26 +390,6 @@ namespace DsprMessage
         return true;
     }
 
-    std::shared_ptr<DsprMessage::ToClientMsg> UnitUpdateMsgV1::getToClientMessage() {
-        std::shared_ptr<CStr> serializedUnitUpdateMsg = this->Serialize();
-        DsprMessage::ToClientMsg* clientMsg = new DsprMessage::ToClientMsg();
-        assert(DsprMessage::ToClientMsg::MessageType::MessageTypeMaxValue < DsprMessage::MaxByteValue);
-        clientMsg->msgType.set((unsigned char) DsprMessage::ToClientMsg::MessageType::UnitUpdate);
-        clientMsg->msgBytes.loadFromCstr(serializedUnitUpdateMsg);
-
-        //and, quickly test it comin back out again
-        ////TODO: REMOVE THIS FOR PRODUCTION!!!!
-        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Pack());
-
-        if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
-        {
-            int i = 12; //:(
-        }
-        ////TODO: REMOVE THIS FOR PRODUCTION!!!!
-
-        return std::shared_ptr<DsprMessage::ToClientMsg>(clientMsg);
-    }
-
     ////////////////////////////////////////////////////////
     UnitDeleteMsgV1::UnitDeleteMsgV1() {
 
@@ -410,5 +405,27 @@ namespace DsprMessage
 
     void UnitDeleteMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
+    }
+
+    ////////////////////////////////////////////////////////
+
+    std::shared_ptr<DsprMessage::ToClientMsg> ToClientSubMessage::getToClientMessage() {
+        std::shared_ptr<CStr> serializedUnitUpdateMsg = this->Serialize();
+        DsprMessage::ToClientMsg* clientMsg = new DsprMessage::ToClientMsg();
+        assert(DsprMessage::ToClientMsg::MessageType::MessageTypeMaxValue < DsprMessage::MaxByteValue);
+        clientMsg->msgType.set((unsigned char) this->getMessageType());
+        clientMsg->msgBytes.loadFromCstr(serializedUnitUpdateMsg);
+
+        //and, quickly test it comin back out again
+        ////TODO: REMOVE THIS FOR PRODUCTION!!!!
+        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Pack());
+
+        if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
+        {
+            int i = 12; //:(
+        }
+        ////TODO: REMOVE THIS FOR PRODUCTION!!!!
+
+        return std::shared_ptr<DsprMessage::ToClientMsg>(clientMsg);
     }
 }

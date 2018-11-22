@@ -55,13 +55,21 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<CStr> fromString);
-
-
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class ChatSendClientMsgV1
+    class ToClientSubMessage
+    {
+    public:
+        std::shared_ptr<DsprMessage::ToClientMsg> getToClientMessage();
+        virtual std::shared_ptr<DsprMessage::CStr> Serialize() = 0;
+        virtual DsprMessage::ToClientMsg::MessageType getMessageType() = 0;
+    };
+
+    /////////////////////////////////////////////////////////////////////////
+
+    class ChatSendClientMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -84,11 +92,13 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        virtual DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::ChatSend; }
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class EconomyUpdateMsgV1
+    class EconomyUpdateMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -114,11 +124,13 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::EconomyUpdate;};
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class TribeSetMsgV1
+    class TribeSetMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -126,7 +138,7 @@ namespace DsprMessage
 
         //Serialization
         TribeSetMsgV1(const Array& fromArray);
-        std::shared_ptr<DsprMessage::CStr> Serialize();
+        virtual std::shared_ptr<CStr> Serialize() override;
 
         //Variables
         enum VariableName
@@ -138,11 +150,13 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::TribeSet;}
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class TileCreateMsgV1
+    class TileCreateMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -166,11 +180,13 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::TileCreate; };
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class GridCreateMsgV1
+    class GridCreateMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -192,11 +208,13 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::GridCreate; };
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class ItemCreateMsgV1
+    class ItemCreateMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -222,11 +240,13 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::ItemCreate; };
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class ItemDeleteMsgV1
+    class ItemDeleteMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -246,11 +266,13 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::ItemDelete;};
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class UnitCreateMsgV1
+    class UnitCreateMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -278,6 +300,8 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::UnitCreate;};
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -308,7 +332,7 @@ namespace DsprMessage
 
     /////////////////////////////////////////////////////////////////////////
 
-    class UnitUpdateMsgV1
+    class UnitUpdateMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -316,7 +340,7 @@ namespace DsprMessage
 
         //Serialization
         UnitUpdateMsgV1(const Array& fromArray);
-        std::shared_ptr<CStr> Serialize();
+        virtual std::shared_ptr<CStr> Serialize() override;
 
         //Variables
         enum VariableName
@@ -349,16 +373,16 @@ namespace DsprMessage
 
         static bool Equals(const UnitUpdateMsgV1& a, const UnitUpdateMsgV1& b);
 
-        std::shared_ptr<DsprMessage::ToClientMsg> getToClientMessage();
-
     private:
 
         void Deserialize(std::shared_ptr<CStr> fromString);
+
+        virtual DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::UnitUpdate; }
     };
 
     /////////////////////////////////////////////////////////////////////////
 
-    class UnitDeleteMsgV1
+    class UnitDeleteMsgV1 : public ToClientSubMessage
     {
     public:
 
@@ -380,5 +404,7 @@ namespace DsprMessage
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::UnitDelete;};
     };
 }
