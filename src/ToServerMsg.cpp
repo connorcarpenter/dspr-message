@@ -25,27 +25,27 @@ namespace DsprMessage
         this->msgType.serialize(charVector);
         this->msgBytes.serialize(charVector);
 
-        for (int i=0;i<charVector->size();i++)
-        {
-            charVector->addAt(DsprMessage::Modifier, i); //increment everything by our modifier
-        }
+//        for (int i=0;i<charVector->size();i++)
+//        {
+//            charVector->addAt(DsprMessage::Modifier, i); //increment everything by our modifier
+//        }
 
-        charVector->push_back((unsigned char) DsprMessage::EscapeCharacter); //add escape character
+        //charVector->push_back((unsigned char) DsprMessage::EscapeCharacter); //add escape character
 
         return DsprMessage::CStr::make_cstr(charVector);
     }
 
     void ToServerMsg::Unpack(std::shared_ptr<CStr> cstr) {
-        for (int i=0;i<cstr->size()-1;i++)
-        {
-            cstr->subtractAt(DsprMessage::Modifier, i);
-        }
-        if (cstr->at(cstr->size()-1) == DsprMessage::EscapeCharacter)
-        {
-            cstr->subtractAt(DsprMessage::EscapeCharacter, cstr->size()-1);
-        }
-        else
-            cstr->subtractAt(DsprMessage::Modifier, cstr->size()-1);
+//        for (int i=0;i<cstr->size()-1;i++)
+//        {
+//            cstr->subtractAt(DsprMessage::Modifier, i);
+//        }
+//        if (cstr->at(cstr->size()-1) == DsprMessage::EscapeCharacter)
+//        {
+//            cstr->subtractAt(DsprMessage::EscapeCharacter, cstr->size()-1);
+//        }
+//        else
+//            cstr->subtractAt(DsprMessage::Modifier, cstr->size()-1);
         this->Deserialize(cstr);
     }
 
