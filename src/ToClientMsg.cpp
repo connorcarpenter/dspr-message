@@ -1,5 +1,6 @@
 #include <vector>
 #include "ToClientMsg.h"
+#include "Main.h"
 #include <string>
 #include <assert.h>
 
@@ -9,24 +10,47 @@ namespace DsprMessage
 
     }
 
-    ToClientMsg::ToClientMsg(_cstr fromString) {
+    ToClientMsg::ToClientMsg(std::shared_ptr<CStr> fromString) {
         this->Unpack(fromString);
     }
 
-    _cstr ToClientMsg::Serialize() {
-        _charVector* charVector = new _charVector();
+    std::shared_ptr<CStr> ToClientMsg::Serialize()
+    {
+        std::shared_ptr<CharVector> charVector = DsprMessage::CharVector::make_charVector();
+        this->msgType.serialize(charVector);
+        this->msgBytes.serialize(charVector);
+        return DsprMessage::CStr::make_cstr(charVector);
+    }
+
+    std::shared_ptr<CStr> ToClientMsg::Pack()
+    {
+        std::shared_ptr<CharVector> charVector = DsprMessage::CharVector::make_charVector();
         this->msgType.serialize(charVector);
         this->msgBytes.serialize(charVector);
 
-        return _cstr::finalVector(charVector);
+        for (int i=0;i<charVector->size();i++)
+        {
+            charVector->addAt(DsprMessage::Modifier, i); //increment everything by our modifier
+        }
+
+        charVector->push_back(DsprMessage::EscapeCharacter); //add escape character
+
+        return DsprMessage::CStr::make_cstr(charVector);
     }
 
-    void ToClientMsg::Deserialize(_cstr fromString) {
-        int index = 0;
-        while(index < fromString.number)
+    void ToClientMsg::Unpack(std::shared_ptr<DsprMessage::CStr> cstr) {
+        for (int i=0;i<cstr->size();i++)
         {
-            if (fromString.innerCstr[index] == '\1')break;
-            unsigned char name = fromString.getDs(index);
+            cstr->subtractAt(DsprMessage::Modifier, i);
+        }
+        this->Deserialize(cstr);
+    }
+
+    void ToClientMsg::Deserialize(std::shared_ptr<CStr> fromString) {
+        int index = 0;
+        while(index < fromString->size())
+        {
+            unsigned char name = fromString->at(index);
             switch(name)
             {
                 case VariableName::MsgType:
@@ -37,40 +61,25 @@ namespace DsprMessage
                     break;
                 default:
                     int i = 10;//blah... :(
+                    index = fromString->size();
+                    break;
             }
         }
     }
 
-    bool ToClientMsg::Equals(ToClientMsg *a, ToClientMsg *b) {
-        if (a->msgType.get() != b->msgType.get())
+    bool ToClientMsg::Equals(const ToClientMsg& a, const ToClientMsg& b) {
+        if (a.msgType.get() != b.msgType.get())
         {
             return false;
         }
-        UnitUpdateMsgV1* aUU = new UnitUpdateMsgV1(a->msgBytes.getCstr());
-        UnitUpdateMsgV1* bUU = new UnitUpdateMsgV1(b->msgBytes.getCstr());
+
+        UnitUpdateMsgV1 aUU = UnitUpdateMsgV1(DsprMessage::CStr::make_cstr(a.msgBytes));
+        UnitUpdateMsgV1 bUU = UnitUpdateMsgV1(DsprMessage::CStr::make_cstr(b.msgBytes));
         if (!UnitUpdateMsgV1::Equals(aUU, bUU))
         {
             return false;
         }
         return true;
-
-    }
-
-    _cstr ToClientMsg::Pack() {
-        _cstr cstr = this->Serialize();
-        for (int i=0;i<cstr.number-1;i++)
-        {
-            cstr.innerCstr[i] += DsprMessage::Modifier;
-        }
-        return cstr;
-    }
-
-    void ToClientMsg::Unpack(_cstr cstr) {
-        for (int i=0;i<cstr.number-1;i++)
-        {
-            cstr.innerCstr[i] -= DsprMessage::Modifier;
-        }
-        this->Deserialize(cstr);
     }
 
     ////////////////////////////////////////////////
@@ -79,15 +88,15 @@ namespace DsprMessage
 
     }
 
-    ChatSendClientMsgV1::ChatSendClientMsgV1(_cstr fromString) {
+    ChatSendClientMsgV1::ChatSendClientMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr ChatSendClientMsgV1::Serialize() {
+    std::shared_ptr<DsprMessage::CStr> ChatSendClientMsgV1::Serialize() {
 
     }
 
-    void ChatSendClientMsgV1::Deserialize(_cstr fromString) {
+    void ChatSendClientMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -97,15 +106,15 @@ namespace DsprMessage
 
     }
 
-    EconomyUpdateMsgV1::EconomyUpdateMsgV1(_cstr fromString) {
+    EconomyUpdateMsgV1::EconomyUpdateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr EconomyUpdateMsgV1::Serialize() {
-        return _cstr(nullptr, 0);
+    std::shared_ptr<DsprMessage::CStr> EconomyUpdateMsgV1::Serialize() {
+
     }
 
-    void EconomyUpdateMsgV1::Deserialize(_cstr fromString) {
+    void EconomyUpdateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -114,15 +123,15 @@ namespace DsprMessage
 
     }
 
-    TribeSetMsgV1::TribeSetMsgV1(_cstr fromString) {
+    TribeSetMsgV1::TribeSetMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr TribeSetMsgV1::Serialize() {
+    std::shared_ptr<DsprMessage::CStr> TribeSetMsgV1::Serialize() {
 
     }
 
-    void TribeSetMsgV1::Deserialize(_cstr fromString) {
+    void TribeSetMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -132,15 +141,15 @@ namespace DsprMessage
 
     }
 
-    TileCreateMsgV1::TileCreateMsgV1(_cstr fromString) {
+    TileCreateMsgV1::TileCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr TileCreateMsgV1::Serialize() {
+    std::shared_ptr<DsprMessage::CStr> TileCreateMsgV1::Serialize() {
 
     }
 
-    void TileCreateMsgV1::Deserialize(_cstr fromString) {
+    void TileCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -149,15 +158,15 @@ namespace DsprMessage
 
     }
 
-    GridCreateMsgV1::GridCreateMsgV1(_cstr fromString) {
+    GridCreateMsgV1::GridCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr GridCreateMsgV1::Serialize() {
+    std::shared_ptr<DsprMessage::CStr> GridCreateMsgV1::Serialize() {
 
     }
 
-    void GridCreateMsgV1::Deserialize(_cstr fromString) {
+    void GridCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -167,15 +176,15 @@ namespace DsprMessage
 
     }
 
-    ItemCreateMsgV1::ItemCreateMsgV1(_cstr fromString) {
+    ItemCreateMsgV1::ItemCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr ItemCreateMsgV1::Serialize() {
+    std::shared_ptr<DsprMessage::CStr> ItemCreateMsgV1::Serialize() {
 
     }
 
-    void ItemCreateMsgV1::Deserialize(_cstr fromString) {
+    void ItemCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -185,15 +194,15 @@ namespace DsprMessage
 
     }
 
-    ItemDeleteMsgV1::ItemDeleteMsgV1(_cstr fromString) {
+    ItemDeleteMsgV1::ItemDeleteMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr ItemDeleteMsgV1::Serialize() {
-        return _cstr(nullptr, 0);
+    std::shared_ptr<DsprMessage::CStr> ItemDeleteMsgV1::Serialize() {
+
     }
 
-    void ItemDeleteMsgV1::Deserialize(_cstr fromString) {
+    void ItemDeleteMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -203,15 +212,15 @@ namespace DsprMessage
 
     }
 
-    UnitCreateMsgV1::UnitCreateMsgV1(_cstr fromString) {
+    UnitCreateMsgV1::UnitCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr UnitCreateMsgV1::Serialize() {
+    std::shared_ptr<DsprMessage::CStr> UnitCreateMsgV1::Serialize() {
 
     }
 
-    void UnitCreateMsgV1::Deserialize(_cstr fromString) {
+    void UnitCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 
@@ -221,23 +230,23 @@ namespace DsprMessage
 
     }
 
-    ConstructionQueueMsgV1::ConstructionQueueMsgV1(_cstr fromString) {
+    ConstructionQueueMsgV1::ConstructionQueueMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr ConstructionQueueMsgV1::Serialize() {
-        _charVector* charVector = new _charVector();
+    std::shared_ptr<DsprMessage::CStr> ConstructionQueueMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
         this->buildTime.serialize(charVector);
         this->queue.serialize(charVector);
 
-        return _cstr::fromVector(charVector);
+        return CStr::make_cstr(charVector);
     }
 
-    void ConstructionQueueMsgV1::Deserialize(_cstr fromString) {
+    void ConstructionQueueMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
         int index = 0;
-        while(index < fromString.number)
+        while(index < fromString->size())
         {
-            char name = fromString.getDs(index);
+            char name = fromString->at(index);
             switch(name)
             {
                 case VariableName::BuildTime:
@@ -257,12 +266,12 @@ namespace DsprMessage
 
     }
 
-    UnitUpdateMsgV1::UnitUpdateMsgV1(_cstr fromString) {
+    UnitUpdateMsgV1::UnitUpdateMsgV1(std::shared_ptr<CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr UnitUpdateMsgV1::Serialize() {
-        _charVector* charVector = new _charVector();
+    std::shared_ptr<CStr> UnitUpdateMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
         this->id.serialize(charVector);
         this->nextPosition.serialize(charVector);
         this->moveTarget.serialize(charVector);
@@ -276,14 +285,14 @@ namespace DsprMessage
         this->rallyUnitId.serialize(charVector);
         this->inventory.serialize(charVector);
 
-        return _cstr::fromVector(charVector);
+        return CStr::make_cstr(charVector);
     }
 
-    void UnitUpdateMsgV1::Deserialize(_cstr fromString) {
+    void UnitUpdateMsgV1::Deserialize(std::shared_ptr<CStr> fromString) {
         int index = 0;
-        while(index < fromString.number)
+        while(index < fromString->size())
         {
-            char name = fromString.getDs(index);
+            char name = fromString->at(index);
             switch(name)
             {
                 case VariableName::Id:
@@ -328,51 +337,50 @@ namespace DsprMessage
         }
     }
 
-    bool UnitUpdateMsgV1::Equals(UnitUpdateMsgV1 *a, UnitUpdateMsgV1 *b) {
-        if (!DsprMessage::_array::Equals(a->nextPosition, b->nextPosition))
+    bool UnitUpdateMsgV1::Equals(const UnitUpdateMsgV1& a, const UnitUpdateMsgV1& b) {
+        if (!DsprMessage::Array::Equals(a.nextPosition, b.nextPosition))
             return false;
-        if (!DsprMessage::_array::Equals(a->moveTarget, b->moveTarget))
+        if (!DsprMessage::Array::Equals(a.moveTarget, b.moveTarget))
             return false;
-        if (!DsprMessage::_array::Equals(a->animationState, b->animationState))
+        if (!DsprMessage::Array::Equals(a.animationState, b.animationState))
             return false;
-        if (!DsprMessage::_number::Equals(a->health, b->health))
+        if (!DsprMessage::Number::Equals(a.health, b.health))
             return false;
-        if (!DsprMessage::_number::Equals(a->bleed, b->bleed))
+        if (!DsprMessage::Number::Equals(a.bleed, b.bleed))
             return false;
-        if (!DsprMessage::_number::Equals(a->targetUnitId, b->targetUnitId))
+        if (!DsprMessage::Number::Equals(a.targetUnitId, b.targetUnitId))
             return false;
-        if (!DsprMessage::_array::Equals(a->gatherYield, b->gatherYield))
+        if (!DsprMessage::Array::Equals(a.gatherYield, b.gatherYield))
             return false;
-        if (!DsprMessage::_array::Equals(a->constructionQueue, b->constructionQueue))
+        if (!DsprMessage::Array::Equals(a.constructionQueue, b.constructionQueue))
             return false;
-        if (!DsprMessage::_array::Equals(a->rallyPoint, b->rallyPoint))
+        if (!DsprMessage::Array::Equals(a.rallyPoint, b.rallyPoint))
             return false;
-        if (!DsprMessage::_number::Equals(a->rallyUnitId, b->rallyUnitId))
+        if (!DsprMessage::Number::Equals(a.rallyUnitId, b.rallyUnitId))
             return false;
-        if (!DsprMessage::_array::Equals(a->inventory, b->inventory))
+        if (!DsprMessage::Array::Equals(a.inventory, b.inventory))
             return false;
         return true;
     }
 
-    _cstr UnitUpdateMsgV1::SerializeFinal() {
-        _cstr serializedUnitUpdateMsg = this->Serialize();
+    std::shared_ptr<DsprMessage::ToClientMsg> UnitUpdateMsgV1::getToClientMessage() {
+        std::shared_ptr<CStr> serializedUnitUpdateMsg = this->Serialize();
         DsprMessage::ToClientMsg* clientMsg = new DsprMessage::ToClientMsg();
         assert(DsprMessage::ToClientMsg::MessageType::MessageTypeMaxValue < DsprMessage::MaxByteValue);
         clientMsg->msgType.set((unsigned char) DsprMessage::ToClientMsg::MessageType::UnitUpdate);
-        clientMsg->msgBytes.setCstr(serializedUnitUpdateMsg);
-        auto serializedClientMsg = clientMsg->Pack();
+        clientMsg->msgBytes.loadFromCstr(serializedUnitUpdateMsg);
 
         //and, quickly test it comin back out again
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
-        DsprMessage::ToClientMsg* testMsg = new DsprMessage::ToClientMsg(serializedClientMsg);
+        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Serialize());
 
-        if (!DsprMessage::ToClientMsg::Equals(clientMsg, testMsg))
+        if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
         {
             int i = 12; //:(
         }
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
 
-        return serializedClientMsg;
+        return std::shared_ptr<DsprMessage::ToClientMsg>(clientMsg);
     }
 
     ////////////////////////////////////////////////////////
@@ -380,15 +388,15 @@ namespace DsprMessage
 
     }
 
-    UnitDeleteMsgV1::UnitDeleteMsgV1(_cstr fromString) {
+    UnitDeleteMsgV1::UnitDeleteMsgV1(std::shared_ptr<DsprMessage::CStr> fromString) {
         this->Deserialize(fromString);
     }
 
-    _cstr UnitDeleteMsgV1::Serialize() {
+    std::shared_ptr<DsprMessage::CStr> UnitDeleteMsgV1::Serialize() {
 
     }
 
-    void UnitDeleteMsgV1::Deserialize(_cstr fromString) {
+    void UnitDeleteMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
 
     }
 }

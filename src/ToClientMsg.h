@@ -4,7 +4,7 @@
 // Created by connor on 11/18/18.
 //
 
-#include "DataTypes.h"
+#include "Number.h"
 #include <string>
 
 namespace DsprMessage
@@ -16,8 +16,8 @@ namespace DsprMessage
         ToClientMsg();
 
         //Serialization
-        explicit ToClientMsg(_cstr fromString);
-        _cstr Serialize();
+        explicit ToClientMsg(std::shared_ptr<CStr> fromString);
+        std::shared_ptr<CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -43,18 +43,18 @@ namespace DsprMessage
             AuthGameToken = 11,
             MessageTypeMaxValue = 12,
         };
-        _number msgType = _number(VariableName::MsgType);
 
-        _array msgBytes = _array(VariableName::MsgBytes);
+        Number msgType = Number((unsigned char) VariableName::MsgType);
+        Array msgBytes = Array((unsigned char) VariableName::MsgBytes);
 
-        static bool Equals(ToClientMsg *pMsg, ToClientMsg *pClientMsg);
+        static bool Equals(const ToClientMsg& pMsg, const ToClientMsg& pClientMsg);
 
-        _cstr Pack();
-        void Unpack(_cstr cstr);
+        std::shared_ptr<CStr> Pack();
+        void Unpack(std::shared_ptr<CStr> cstr);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<CStr> fromString);
 
 
     };
@@ -68,8 +68,8 @@ namespace DsprMessage
         ChatSendClientMsgV1();
 
         //Serialization
-        ChatSendClientMsgV1(_cstr fromString);
-        _cstr Serialize();
+        ChatSendClientMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -77,13 +77,13 @@ namespace DsprMessage
             ChatMessage = 1,
             TribeIndex = 2,
         };
-        _array chatMsg = _array(VariableName::ChatMessage);
+        Array chatMsg = Array(VariableName::ChatMessage);
 
-        _number tribeIndex = _number(VariableName::TribeIndex);
+        Number tribeIndex = Number(VariableName::TribeIndex);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -95,8 +95,8 @@ namespace DsprMessage
         EconomyUpdateMsgV1();
 
         //Serialization
-        explicit EconomyUpdateMsgV1(_cstr fromString);
-        _cstr Serialize();
+        explicit EconomyUpdateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -105,15 +105,15 @@ namespace DsprMessage
             PopMax = 2,
             Mana = 3,
         };
-        _number pop = _number(VariableName::Pop);
+        Number pop = Number(VariableName::Pop);
 
-        _number popMax = _number(VariableName::PopMax);
+        Number popMax = Number(VariableName::PopMax);
 
-        _number mana = _number(VariableName::Mana);
+        Number mana = Number(VariableName::Mana);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -125,19 +125,19 @@ namespace DsprMessage
         TribeSetMsgV1();
 
         //Serialization
-        TribeSetMsgV1(_cstr fromString);
-        _cstr Serialize();
+        TribeSetMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
         {
             TribeIndex = 1,
         };
-        _number tribeIndex = _number(VariableName::TribeIndex);
+        Number tribeIndex = Number(VariableName::TribeIndex);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -149,8 +149,8 @@ namespace DsprMessage
         TileCreateMsgV1();
 
         //Serialization
-        TileCreateMsgV1(_cstr fromString);
-        _cstr Serialize();
+        TileCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -159,13 +159,13 @@ namespace DsprMessage
             Y = 2,
             Frame = 3,
         };
-        _number frame = _number(VariableName::Frame);
-        _number x = _number(VariableName::X);
-        _number y = _number(VariableName::Y);
+        Number frame = Number(VariableName::Frame);
+        Number x = Number(VariableName::X);
+        Number y = Number(VariableName::Y);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -177,8 +177,8 @@ namespace DsprMessage
         GridCreateMsgV1();
 
         //Serialization
-        GridCreateMsgV1(_cstr fromString);
-        _cstr Serialize();
+        GridCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -186,12 +186,12 @@ namespace DsprMessage
             Width = 1,
             Height = 2,
         };
-        _number width = _number(VariableName::Width);
-        _number height = _number(VariableName::Height);
+        Number width = Number(VariableName::Width);
+        Number height = Number(VariableName::Height);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -203,8 +203,8 @@ namespace DsprMessage
         ItemCreateMsgV1();
 
         //Serialization
-        ItemCreateMsgV1(_cstr fromString);
-        _cstr Serialize();
+        ItemCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -214,14 +214,14 @@ namespace DsprMessage
             Y = 3,
             TemplateIndex = 4,
         };
-        _number x = _number(VariableName::X);
-        _number y = _number(VariableName::Y);
-        _number id = _number(VariableName::Id);
-        _number templateIndex = _number(VariableName::TemplateIndex);
+        Number x = Number(VariableName::X);
+        Number y = Number(VariableName::Y);
+        Number id = Number(VariableName::Id);
+        Number templateIndex = Number(VariableName::TemplateIndex);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -233,19 +233,19 @@ namespace DsprMessage
         ItemDeleteMsgV1();
 
         //Serialization
-        ItemDeleteMsgV1(_cstr fromString);
-        _cstr Serialize();
+        ItemDeleteMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
         {
             Id = 1,
         };
-        _number id = _number(VariableName::Id);
+        Number id = Number(VariableName::Id);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -257,8 +257,8 @@ namespace DsprMessage
         UnitCreateMsgV1();
 
         //Serialization
-        UnitCreateMsgV1(_cstr fromString);
-        _cstr Serialize();
+        UnitCreateMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -269,15 +269,15 @@ namespace DsprMessage
             TemplateIndex = 4,
             TribeIndex = 5,
         };
-        _number id = _number(VariableName::Id);
-        _number templateIndex = _number(VariableName::TemplateIndex);
-        _number tribeIndex = _number(VariableName::TribeIndex);
-        _number x = _number(VariableName::X);
-        _number y = _number(VariableName::Y);
+        Number id = Number(VariableName::Id);
+        Number templateIndex = Number(VariableName::TemplateIndex);
+        Number tribeIndex = Number(VariableName::TribeIndex);
+        Number x = Number(VariableName::X);
+        Number y = Number(VariableName::Y);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -289,8 +289,8 @@ namespace DsprMessage
         ConstructionQueueMsgV1();
 
         //Serialization
-        ConstructionQueueMsgV1(_cstr fromString);
-        _cstr Serialize();
+        ConstructionQueueMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -298,12 +298,12 @@ namespace DsprMessage
             BuildTime = 1,
             Queue = 2,
         };
-        _number buildTime = _number(VariableName::BuildTime);
-        _array queue = _array(VariableName::Queue);
+        Number buildTime = Number(VariableName::BuildTime);
+        Array queue = Array(VariableName::Queue);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -315,8 +315,8 @@ namespace DsprMessage
         UnitUpdateMsgV1();
 
         //Serialization
-        UnitUpdateMsgV1(_cstr fromString);
-        _cstr Serialize();
+        UnitUpdateMsgV1(std::shared_ptr<CStr> fromString);
+        std::shared_ptr<CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -334,26 +334,26 @@ namespace DsprMessage
             RallyUnitId = 11,
             Inventory = 12,
         };
-        _number id = _number(VariableName::Id);
-        _array nextPosition = _array(VariableName::NextPosition);
-        _array moveTarget = _array(VariableName::MoveTarget);
-        _array animationState = _array(VariableName::AnimationState);
-        _number health = _number(VariableName::Health);
-        _number bleed = _number(VariableName::Bleed);
-        _number targetUnitId = _number(VariableName::TargetUnitId);
-        _array gatherYield = _array(VariableName::GatherYield);
-        _array constructionQueue = _array(VariableName::ConstructionQueue);
-        _array rallyPoint = _array(VariableName::RallyPoint);
-        _number rallyUnitId = _number(VariableName::RallyUnitId);
-        _array inventory = _array(VariableName::Inventory);
+        Number id = Number(VariableName::Id);
+        Array nextPosition = Array(VariableName::NextPosition);
+        Array moveTarget = Array(VariableName::MoveTarget);
+        Array animationState = Array(VariableName::AnimationState);
+        Number health = Number(VariableName::Health);
+        Number bleed = Number(VariableName::Bleed);
+        Number targetUnitId = Number(VariableName::TargetUnitId);
+        Array gatherYield = Array(VariableName::GatherYield);
+        Array constructionQueue = Array(VariableName::ConstructionQueue);
+        Array rallyPoint = Array(VariableName::RallyPoint);
+        Number rallyUnitId = Number(VariableName::RallyUnitId);
+        Array inventory = Array(VariableName::Inventory);
 
-        static bool Equals(UnitUpdateMsgV1 *a, UnitUpdateMsgV1 *b);
+        static bool Equals(const UnitUpdateMsgV1& a, const UnitUpdateMsgV1& b);
 
-        _cstr SerializeFinal();
+        std::shared_ptr<DsprMessage::ToClientMsg> getToClientMessage();
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<CStr> fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -365,8 +365,8 @@ namespace DsprMessage
         UnitDeleteMsgV1();
 
         //Serialization
-        UnitDeleteMsgV1(_cstr fromString);
-        _cstr Serialize();
+        UnitDeleteMsgV1(std::shared_ptr<DsprMessage::CStr> fromString);
+        std::shared_ptr<DsprMessage::CStr> Serialize();
 
         //Variables
         enum VariableName
@@ -374,11 +374,11 @@ namespace DsprMessage
             Id = 1,
             Dead = 2,
         };
-        _number id = _number(VariableName::Id);
-        _number dead = _number(VariableName::Dead);
+        Number id = Number(VariableName::Id);
+        Number dead = Number(VariableName::Dead);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
     };
 }

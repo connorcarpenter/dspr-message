@@ -4,7 +4,7 @@
 // Created by connor on 11/18/18.
 //
 
-#include "DataTypes.h"
+#include "Number.h"
 
 namespace DsprMessage
 {
@@ -15,8 +15,8 @@ namespace DsprMessage
         ToServerMsg(){};
 
         //Serialization
-        ToServerMsg(_cstr fromString);
-        _cstr Serialize();
+        ToServerMsg(CStr fromString);
+        CStr Serialize();
 
         //Variables
         enum VariableName
@@ -25,7 +25,7 @@ namespace DsprMessage
             MsgType = 2,
             MsgBytes = 3,
         };
-        _array authToken = _array(VariableName::AuthToken);
+        Array authToken = Array(VariableName::AuthToken);
 
         enum MessageType
         {
@@ -33,13 +33,13 @@ namespace DsprMessage
             UnitOrder = 2,
             ChatSend = 3,
         };
-        _number msgType = _number(VariableName::MsgType);
+        Number msgType = Number(VariableName::MsgType);
 
-        _array msgBytes = _array(VariableName::MsgBytes);
+        Array msgBytes = Array(VariableName::MsgBytes);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(CStr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -51,19 +51,19 @@ namespace DsprMessage
         ChatSendServerMsgV1();
 
         //Serialization
-        ChatSendServerMsgV1(_cstr fromString);
-        _cstr Serialize();
+        ChatSendServerMsgV1(CStr fromString);
+        CStr Serialize();
 
         //Variables
         enum VariableName
         {
             ChatMessage = 1,
         };
-        _array chatMsg = _array(VariableName::ChatMessage);
+        Array chatMsg = Array(VariableName::ChatMessage);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(CStr fromString);
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -75,8 +75,8 @@ namespace DsprMessage
         UnitOrderMsgV1();
 
         //Serialization
-        UnitOrderMsgV1(_cstr fromString);
-        _cstr Serialize();
+        UnitOrderMsgV1(CStr fromString);
+        CStr Serialize();
 
         //Variables
         enum VariableName
@@ -85,14 +85,14 @@ namespace DsprMessage
             OrderIndex = 2,
             OtherNumbers = 3,
         };
-        _array unitIds = _array(VariableName::UnitIds);
+        Array unitIds = Array(VariableName::UnitIds);
 
-        _number orderIndex = _number(VariableName::OrderIndex);
+        Number orderIndex = Number(VariableName::OrderIndex);
 
-        _array otherNumbers = _array(VariableName::OtherNumbers);
+        Array otherNumbers = Array(VariableName::OtherNumbers);
 
     private:
 
-        void Deserialize(_cstr fromString);
+        void Deserialize(CStr fromString);
     };
 }
