@@ -32,16 +32,16 @@ namespace DsprMessage
             ChatSend = 1,
             EconomyUpdate = 2,
             TribeSet = 3,
-            TileCreate = 3,
-            GridCreate = 4,
-            ItemCreate = 5,
-            ItemDelete = 6,
-            UnitCreate = 7,
-            UnitUpdate = 8,
-            UnitDelete = 9,
-            StandardMessage = 10,
-            AuthGameToken = 11,
-            MessageTypeMaxValue = 12,
+            TileCreate = 4,
+            GridCreate = 5,
+            ItemCreate = 6,
+            ItemDelete = 7,
+            UnitCreate = 8,
+            UnitUpdate = 9,
+            UnitDelete = 10,
+            StandardMessage = 11,
+            AuthGameToken = 12,
+            MessageTypeMaxValue = 13,
         };
 
         Number msgType = Number((unsigned char) VariableName::MsgType);
@@ -164,7 +164,7 @@ namespace DsprMessage
 
         //Serialization
         TileCreateMsgV1(const Array& fromArray);
-        std::shared_ptr<DsprMessage::CStr> Serialize();
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
 
         //Variables
         enum VariableName
@@ -194,7 +194,7 @@ namespace DsprMessage
 
         //Serialization
         GridCreateMsgV1(const Array& fromArray);
-        std::shared_ptr<DsprMessage::CStr> Serialize();
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
 
         //Variables
         enum VariableName

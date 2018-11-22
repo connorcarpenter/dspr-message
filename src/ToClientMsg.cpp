@@ -178,11 +178,34 @@ namespace DsprMessage
     }
 
     std::shared_ptr<DsprMessage::CStr> TileCreateMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->x.serialize(charVector);
+        this->y.serialize(charVector);
+        this->frame.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void TileCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::X:
+                    index = this->x.deserialize(index+1, fromString);
+                    break;
+                case VariableName::Y:
+                    index = this->y.deserialize(index+1, fromString);
+                    break;
+                case VariableName::Frame:
+                    index = this->frame.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////
