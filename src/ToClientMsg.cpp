@@ -6,10 +6,6 @@
 
 namespace DsprMessage
 {
-    ToClientMsg::ToClientMsg() {
-
-    }
-
     ToClientMsg::ToClientMsg(std::shared_ptr<CStr> fromString) {
         this->Unpack(fromString);
     }
@@ -101,10 +97,6 @@ namespace DsprMessage
 
     ////////////////////////////////////////////////
 
-    ChatSendClientMsgV1::ChatSendClientMsgV1() {
-
-    }
-
     ChatSendClientMsgV1::ChatSendClientMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
     }
@@ -118,10 +110,6 @@ namespace DsprMessage
     }
 
     ////////////////////////////////////////////////
-
-    EconomyUpdateMsgV1::EconomyUpdateMsgV1() {
-
-    }
 
     EconomyUpdateMsgV1::EconomyUpdateMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
@@ -159,9 +147,6 @@ namespace DsprMessage
     }
 
     ////////////////////////////////////////////////
-    TribeSetMsgV1::TribeSetMsgV1() {
-
-    }
 
     TribeSetMsgV1::TribeSetMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
@@ -191,10 +176,6 @@ namespace DsprMessage
     }
 
     ////////////////////////////////////////////////
-
-    TileCreateMsgV1::TileCreateMsgV1() {
-
-    }
 
     TileCreateMsgV1::TileCreateMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
@@ -232,9 +213,6 @@ namespace DsprMessage
     }
 
     ////////////////////////////////////////////////
-    GridCreateMsgV1::GridCreateMsgV1() {
-
-    }
 
     GridCreateMsgV1::GridCreateMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
@@ -269,27 +247,46 @@ namespace DsprMessage
 
     ////////////////////////////////////////////////////////
 
-    ItemCreateMsgV1::ItemCreateMsgV1() {
-
-    }
-
     ItemCreateMsgV1::ItemCreateMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
     }
 
     std::shared_ptr<DsprMessage::CStr> ItemCreateMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->id.serialize(charVector);
+        this->x.serialize(charVector);
+        this->y.serialize(charVector);
+        this->templateIndex.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void ItemCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::Id:
+                    index = this->id.deserialize(index+1, fromString);
+                    break;
+                case VariableName::X:
+                    index = this->x.deserialize(index+1, fromString);
+                    break;
+                case VariableName::Y:
+                    index = this->y.deserialize(index+1, fromString);
+                    break;
+                case VariableName::TemplateIndex:
+                    index = this->templateIndex.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////////////
-
-    ItemDeleteMsgV1::ItemDeleteMsgV1() {
-
-    }
 
     ItemDeleteMsgV1::ItemDeleteMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
@@ -304,10 +301,6 @@ namespace DsprMessage
     }
 
     ////////////////////////////////////////////////////////
-
-    UnitCreateMsgV1::UnitCreateMsgV1() {
-
-    }
 
     UnitCreateMsgV1::UnitCreateMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
@@ -354,10 +347,6 @@ namespace DsprMessage
 
     ////////////////////////////////////////////////////////
 
-    ConstructionQueueMsgV1::ConstructionQueueMsgV1() {
-
-    }
-
     ConstructionQueueMsgV1::ConstructionQueueMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
     }
@@ -390,9 +379,6 @@ namespace DsprMessage
     }
 
     ////////////////////////////////////////////////
-    UnitUpdateMsgV1::UnitUpdateMsgV1() {
-
-    }
 
     UnitUpdateMsgV1::UnitUpdateMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
@@ -492,9 +478,6 @@ namespace DsprMessage
     }
 
     ////////////////////////////////////////////////////////
-    UnitDeleteMsgV1::UnitDeleteMsgV1() {
-
-    }
 
     UnitDeleteMsgV1::UnitDeleteMsgV1(const Array& fromArray) {
         this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));

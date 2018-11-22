@@ -13,7 +13,7 @@ namespace DsprMessage
     {
     public:
 
-        ToClientMsg();
+        ToClientMsg() = default;
 
         //Serialization
         explicit ToClientMsg(std::shared_ptr<CStr> fromString);
@@ -73,7 +73,7 @@ namespace DsprMessage
     {
     public:
 
-        ChatSendClientMsgV1();
+        ChatSendClientMsgV1() = default;
 
         //Serialization
         ChatSendClientMsgV1(const Array& fromArray);
@@ -102,7 +102,7 @@ namespace DsprMessage
     {
     public:
 
-        EconomyUpdateMsgV1();
+        EconomyUpdateMsgV1() = default;
 
         //Serialization
         explicit EconomyUpdateMsgV1(const Array& fromArray);
@@ -134,7 +134,7 @@ namespace DsprMessage
     {
     public:
 
-        TribeSetMsgV1();
+        TribeSetMsgV1() = default;
 
         //Serialization
         TribeSetMsgV1(const Array& fromArray);
@@ -160,7 +160,7 @@ namespace DsprMessage
     {
     public:
 
-        TileCreateMsgV1();
+        TileCreateMsgV1() = default;
 
         //Serialization
         TileCreateMsgV1(const Array& fromArray);
@@ -190,7 +190,7 @@ namespace DsprMessage
     {
     public:
 
-        GridCreateMsgV1();
+        GridCreateMsgV1() = default;
 
         //Serialization
         GridCreateMsgV1(const Array& fromArray);
@@ -218,11 +218,11 @@ namespace DsprMessage
     {
     public:
 
-        ItemCreateMsgV1();
+        ItemCreateMsgV1() = default;
 
         //Serialization
         ItemCreateMsgV1(const Array& fromArray);
-        std::shared_ptr<DsprMessage::CStr> Serialize();
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
 
         //Variables
         enum VariableName
@@ -250,7 +250,7 @@ namespace DsprMessage
     {
     public:
 
-        ItemDeleteMsgV1();
+        ItemDeleteMsgV1() = default;
 
         //Serialization
         ItemDeleteMsgV1(const Array& fromArray);
@@ -276,7 +276,7 @@ namespace DsprMessage
     {
     public:
 
-        UnitCreateMsgV1();
+        UnitCreateMsgV1() = default;
 
         //Serialization
         UnitCreateMsgV1(const Array& fromArray);
@@ -310,7 +310,7 @@ namespace DsprMessage
     {
     public:
 
-        ConstructionQueueMsgV1();
+        ConstructionQueueMsgV1() = default;
 
         //Serialization
         ConstructionQueueMsgV1(const Array& fromArray);
@@ -336,7 +336,7 @@ namespace DsprMessage
     {
     public:
 
-        UnitUpdateMsgV1();
+        UnitUpdateMsgV1() = default;
 
         //Serialization
         UnitUpdateMsgV1(const Array& fromArray);
@@ -386,7 +386,7 @@ namespace DsprMessage
     {
     public:
 
-        UnitDeleteMsgV1();
+        UnitDeleteMsgV1() = default;
 
         //Serialization
         UnitDeleteMsgV1(const Array& fromArray);
