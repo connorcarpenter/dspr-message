@@ -31,6 +31,7 @@ namespace DsprMessage
         unsigned char *innerCstr = nullptr;
 
         CStr(unsigned char* otherCstr, unsigned int number);
+        CStr(const unsigned char* otherCstr, unsigned int number);
 
         CStr(std::shared_ptr<CharVector> pVector);
 

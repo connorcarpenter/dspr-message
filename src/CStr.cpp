@@ -22,7 +22,14 @@ namespace DsprMessage
 
     CStr::CStr(unsigned char* otherCstr, unsigned int number)
     {
-        this->innerCstr = otherCstr;
+        this->number = number;
+        this->innerCstr = new unsigned char[this->number];
+        for(int i=0;i<this->number;i++)
+            this->innerCstr[i] = otherCstr[i];
+    }
+
+    CStr::CStr(const unsigned char *otherCstr, unsigned int number)
+    {
         this->number = number;
         this->innerCstr = new unsigned char[this->number];
         for(int i=0;i<this->number;i++)
