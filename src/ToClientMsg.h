@@ -77,7 +77,7 @@ namespace DsprMessage
 
         //Serialization
         ChatSendClientMsgV1(const Array& fromArray);
-        std::shared_ptr<DsprMessage::CStr> Serialize();
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
 
         //Variables
         enum VariableName

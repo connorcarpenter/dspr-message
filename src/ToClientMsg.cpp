@@ -102,11 +102,30 @@ namespace DsprMessage
     }
 
     std::shared_ptr<DsprMessage::CStr> ChatSendClientMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->tribeIndex.serialize(charVector);
+        this->chatMsg.serialize(charVector);
 
+        return CStr::make_cstr(charVector);
     }
 
     void ChatSendClientMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
-
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::TribeIndex:
+                    index = this->tribeIndex.deserialize(index+1, fromString);
+                    break;
+                case VariableName::ChatMessage:
+                    index = this->chatMsg.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
     }
 
     ////////////////////////////////////////////////
