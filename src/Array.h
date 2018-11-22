@@ -41,9 +41,9 @@ namespace DsprMessage {
 
         unsigned int size() const;
 
-        bool wasSet();
+        bool getWasSet() const;
 
-        void loadFromString(std::string str);
+        void loadFromString(const std::string& str);
 
         void loadFromCstr(std::shared_ptr<CStr> cstr);
 
@@ -55,6 +55,6 @@ namespace DsprMessage {
         unsigned char name;
         unsigned int dataSize = 1;
         std::vector<unsigned int> contents;
-        bool set = false;
+        bool wasSet = false;
     };
 }

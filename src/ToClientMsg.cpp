@@ -33,16 +33,22 @@ namespace DsprMessage
             charVector->addAt(DsprMessage::Modifier, i); //increment everything by our modifier
         }
 
-        charVector->push_back(DsprMessage::EscapeCharacter); //add escape character
+        charVector->push_back((unsigned char) DsprMessage::EscapeCharacter); //add escape character
 
         return DsprMessage::CStr::make_cstr(charVector);
     }
 
     void ToClientMsg::Unpack(std::shared_ptr<DsprMessage::CStr> cstr) {
-        for (int i=0;i<cstr->size();i++)
+        for (int i=0;i<cstr->size()-1;i++)
         {
             cstr->subtractAt(DsprMessage::Modifier, i);
         }
+        if (cstr->at(cstr->size()-1) == DsprMessage::EscapeCharacter)
+        {
+            cstr->subtractAt(DsprMessage::EscapeCharacter, cstr->size()-1);
+        }
+        else
+            cstr->subtractAt(DsprMessage::Modifier, cstr->size()-1);
         this->Deserialize(cstr);
     }
 
@@ -59,9 +65,15 @@ namespace DsprMessage
                 case VariableName::MsgBytes:
                     index = this->msgBytes.deserialize(index+1, fromString);
                     break;
-                default:
+                case '\0': {
+                    int i = 10;
+                    index = fromString->size();
+                }
+                    break;
+                default: {
                     int i = 10;//blah... :(
                     index = fromString->size();
+                }
                     break;
             }
         }
@@ -372,7 +384,7 @@ namespace DsprMessage
 
         //and, quickly test it comin back out again
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
-        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Serialize());
+        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Pack());
 
         if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
         {

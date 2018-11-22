@@ -76,7 +76,7 @@ namespace DsprMessage
         return true;
     }
 
-    bool Number::getWasSet() {
+    bool Number::getWasSet() const {
         return this->wasSet;
     }
 }

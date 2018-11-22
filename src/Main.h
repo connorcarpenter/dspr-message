@@ -7,5 +7,5 @@
 namespace DsprMessage {
     const static unsigned int Modifier = 2;
     const static unsigned int MaxByteValue = 255-Modifier;
-    const static unsigned int EscapeCharacter = '\1';
+    const static char EscapeCharacter = '\1';
 }

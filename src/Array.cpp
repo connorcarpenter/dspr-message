@@ -4,6 +4,7 @@
 
 #include "Array.h"
 #include "Number.h"
+#include <string>
 
 namespace DsprMessage{
     Array::Array(unsigned char name)
@@ -19,14 +20,14 @@ namespace DsprMessage{
     {
         checkForDataSize(value);
         this->contents.push_back(value);
-        this->set = true;
+        this->wasSet = true;
     }
 
     void Array::add(unsigned int value)
     {
         checkForDataSize(value);
         this->contents.push_back(value);
-        this->set = true;
+        this->wasSet = true;
     }
 
     void Array::add(int value)
@@ -53,7 +54,7 @@ namespace DsprMessage{
     }
 
     void Array::serialize(std::shared_ptr<CharVector> charVector) {
-        if (!this->wasSet()) return;
+        if (!this->getWasSet()) return;
         charVector->push_back(this->name);
         charVector->push_back(this->dataSize);
         charVector->push_back(this->contents.size());
@@ -81,7 +82,7 @@ namespace DsprMessage{
             index += this->dataSize;
             this->contents.push_back(val);
         }
-        this->set = true;
+        this->wasSet = true;
         return index;
     }
 
@@ -100,18 +101,23 @@ namespace DsprMessage{
         return contents.size();
     }
 
-    bool Array::wasSet() {
-        return this->set;
+    bool Array::getWasSet () const {
+        return this->wasSet;
     }
 
-    void Array::loadFromString(std::string str) {
+    void Array::loadFromString(const std::string& str) {
+        this->contents.clear();
+        this->wasSet = true;
         for(int i=0;i<str.size();i++)
         {
             this->contents.push_back(str.at(i));
         }
+
     }
 
     void Array::loadFromCstr(std::shared_ptr<CStr> cstr) {
+        this->contents.clear();
+        this->wasSet = true;
         for(int i=0;i<cstr->size();i++)
         {
             this->contents.push_back(cstr->at(i));

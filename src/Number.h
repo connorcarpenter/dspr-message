@@ -21,7 +21,7 @@ namespace DsprMessage
         void set(T) = delete; //this enforces that no implicit casts happen
 
         unsigned int get() const;
-        bool getWasSet();
+        bool getWasSet() const;
 
         void serialize(std::shared_ptr<CharVector> charVector);
         int deserialize(int index, std::shared_ptr<CStr> cstr);
