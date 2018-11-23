@@ -35,6 +35,8 @@ namespace DsprMessage {
         void loadFromString(const std::string& str);
         void loadFromCstr(std::shared_ptr<CStr> cstr);
 
+        std::shared_ptr<std::string> toStdString();
+
     private:
 
         //Array(const Array&) = delete;

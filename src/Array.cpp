@@ -5,6 +5,7 @@
 #include "Array.h"
 #include "Number.h"
 #include <string>
+#include <memory>
 
 namespace DsprMessage{
     Array::Array(unsigned char name)
@@ -122,5 +123,22 @@ namespace DsprMessage{
         {
             this->contents.push_back(cstr->at(i));
         }
+    }
+
+    std::shared_ptr<std::string> Array::toStdString() {
+        int newSize = this->size()+1;
+        auto output = new char[newSize];
+        for (int i=0;i<newSize-1;i++)
+        {
+            output[i] = get(i);
+        }
+        output[newSize-1] = '\0';
+
+        std::string* newString = new std::string(output);
+        std::shared_ptr<std::string> msgString = std::unique_ptr<std::string>(newString);
+        delete [] output;
+
+
+        return msgString;
     }
 }

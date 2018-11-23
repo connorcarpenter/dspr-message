@@ -25,10 +25,10 @@ namespace DsprMessage
         this->msgType.serialize(charVector);
         this->msgBytes.serialize(charVector);
 
-//        for (int i=0;i<charVector->size();i++)
-//        {
-//            charVector->addAt(DsprMessage::Modifier, i); //increment everything by our modifier
-//        }
+        for (int i=0;i<charVector->size();i++)
+        {
+            charVector->addAt(DsprMessage::Modifier, i); //increment everything by our modifier
+        }
 
         //charVector->push_back((unsigned char) DsprMessage::EscapeCharacter); //add escape character
 
@@ -36,10 +36,10 @@ namespace DsprMessage
     }
 
     void ToServerMsg::Unpack(std::shared_ptr<CStr> cstr) {
-//        for (int i=0;i<cstr->size()-1;i++)
-//        {
-//            cstr->subtractAt(DsprMessage::Modifier, i);
-//        }
+        for (int i=0;i<cstr->size();i++)
+        {
+            cstr->subtractAt(DsprMessage::Modifier, i);
+        }
 //        if (cstr->at(cstr->size()-1) == DsprMessage::EscapeCharacter)
 //        {
 //            cstr->subtractAt(DsprMessage::EscapeCharacter, cstr->size()-1);
@@ -137,7 +137,7 @@ namespace DsprMessage
                     index = this->orderIndex.deserialize(index+1, fromString);
                     break;
                 case VariableName::OtherNumbers:
-                    index = this->orderIndex.deserialize(index+1, fromString);
+                    index = this->otherNumbers.deserialize(index+1, fromString);
                     break;
                 default:
                     int i = 10;//blah... :(
@@ -149,11 +149,11 @@ namespace DsprMessage
 
     std::shared_ptr<DsprMessage::ToServerMsg> ToServerSubMessage::getToServerMessage() {
         std::shared_ptr<CStr> serializedUnitUpdateMsg = this->Serialize();
-        DsprMessage::ToServerMsg* clientMsg = new DsprMessage::ToServerMsg();
+        DsprMessage::ToServerMsg* serverMsg = new DsprMessage::ToServerMsg();
         assert(DsprMessage::ToServerMsg::MessageType::MessageTypeMaxValue < DsprMessage::MaxByteValue);
-        clientMsg->msgType.set((unsigned char) this->getMessageType());
-        clientMsg->msgBytes.loadFromCstr(serializedUnitUpdateMsg);
+        serverMsg->msgType.set((unsigned char) this->getMessageType());
+        serverMsg->msgBytes.loadFromCstr(serializedUnitUpdateMsg);
 
-        return std::shared_ptr<DsprMessage::ToServerMsg>(clientMsg);
+        return std::shared_ptr<DsprMessage::ToServerMsg>(serverMsg);
     }
 }
