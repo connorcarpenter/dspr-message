@@ -64,6 +64,7 @@ namespace DsprMessage
         std::shared_ptr<DsprMessage::ToClientMsg> getToClientMessage();
         virtual std::shared_ptr<DsprMessage::CStr> Serialize() = 0;
         virtual DsprMessage::ToClientMsg::MessageType getMessageType() = 0;
+        virtual void PrintMsg() = 0;
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -77,6 +78,7 @@ namespace DsprMessage
         //Serialization
         ChatSendClientMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -106,6 +108,7 @@ namespace DsprMessage
         //Serialization
         explicit EconomyUpdateMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -138,6 +141,7 @@ namespace DsprMessage
         //Serialization
         TribeSetMsgV1(const Array& fromArray);
         virtual std::shared_ptr<CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -164,6 +168,7 @@ namespace DsprMessage
         //Serialization
         TileCreateMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -194,6 +199,7 @@ namespace DsprMessage
         //Serialization
         GridCreateMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -222,6 +228,7 @@ namespace DsprMessage
         //Serialization
         ItemCreateMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -254,6 +261,7 @@ namespace DsprMessage
         //Serialization
         ItemDeleteMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -280,6 +288,7 @@ namespace DsprMessage
         //Serialization
         UnitCreateMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -324,9 +333,12 @@ namespace DsprMessage
         Number buildTime = Number(VariableName::BuildTime);
         Array queue = Array(VariableName::Queue);
 
+        void PrintMsg();
+
     private:
 
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
     };
 
     /////////////////////////////////////////////////////////////////////////
@@ -340,6 +352,7 @@ namespace DsprMessage
         //Serialization
         UnitUpdateMsgV1(const Array& fromArray);
         virtual std::shared_ptr<CStr> Serialize() override;
+        void PrintMsg() override;
 
         //Variables
         enum VariableName
@@ -390,6 +403,7 @@ namespace DsprMessage
         //Serialization
         UnitDeleteMsgV1(const Array& fromArray);
         std::shared_ptr<DsprMessage::CStr> Serialize();
+        void PrintMsg() override;
 
         //Variables
         enum VariableName

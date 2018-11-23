@@ -3,6 +3,7 @@
 #include "Main.h"
 #include <string>
 #include <assert.h>
+#include <iostream>
 
 namespace DsprMessage
 {
@@ -128,6 +129,10 @@ namespace DsprMessage
         }
     }
 
+    void ChatSendClientMsgV1::PrintMsg() {
+        std::cout << "Sent: ChatMessage: " << this->chatMsg.toStdString() << std::endl;
+    }
+
     ////////////////////////////////////////////////
 
     EconomyUpdateMsgV1::EconomyUpdateMsgV1(const Array& fromArray) {
@@ -165,6 +170,17 @@ namespace DsprMessage
         }
     }
 
+    void EconomyUpdateMsgV1::PrintMsg() {
+        std::cout << "Sent: EconomyUpdate: ";
+        if (this->mana.getWasSet())
+            std::cout << "mana: " << this->mana.get();
+        if (this->pop.getWasSet())
+            std::cout << "pop: " << this->pop.get();
+        if (this->popMax.getWasSet())
+            std::cout << "popMax: " << this->popMax.get();
+        std::cout << std::endl;
+    }
+
     ////////////////////////////////////////////////
 
     TribeSetMsgV1::TribeSetMsgV1(const Array& fromArray) {
@@ -192,6 +208,10 @@ namespace DsprMessage
                     int i = 10;//blah... :(
             }
         }
+    }
+
+    void TribeSetMsgV1::PrintMsg() {
+        std::cout << "Sent: TribeSet: index: " << this->tribeIndex.get() << std::endl;
     }
 
     ////////////////////////////////////////////////
@@ -231,6 +251,10 @@ namespace DsprMessage
         }
     }
 
+    void TileCreateMsgV1::PrintMsg() {
+        std::cout << "Sent: TileCreate: x: " << this->x.get() << " y: " << this->y.get() << " frame: " << this->frame.get() << std::endl;
+    }
+
     ////////////////////////////////////////////////
 
     GridCreateMsgV1::GridCreateMsgV1(const Array& fromArray) {
@@ -262,6 +286,10 @@ namespace DsprMessage
                     int i = 10;//blah... :(
             }
         }
+    }
+
+    void GridCreateMsgV1::PrintMsg() {
+        std::cout << "Sent: GridCreate: width: " << this->width.get() << " y: " << this->height.get() << std::endl;
     }
 
     ////////////////////////////////////////////////////////
@@ -305,6 +333,10 @@ namespace DsprMessage
         }
     }
 
+    void ItemCreateMsgV1::PrintMsg() {
+        std::cout << "Sent: ItemCreate: id: " << this->id.get() << " x: " << this->x.get() << " y: " << this->y.get() << " templateIndex: " << this->templateIndex.get() << std::endl;
+    }
+
     ////////////////////////////////////////////////////////
 
     ItemDeleteMsgV1::ItemDeleteMsgV1(const Array& fromArray) {
@@ -332,6 +364,10 @@ namespace DsprMessage
                     int i = 10;//blah... :(
             }
         }
+    }
+
+    void ItemDeleteMsgV1::PrintMsg() {
+        std::cout << "Sent: ItemDelete: id: " << this->id.get() << std::endl;
     }
 
     ////////////////////////////////////////////////////////
@@ -379,6 +415,10 @@ namespace DsprMessage
         }
     }
 
+    void UnitCreateMsgV1::PrintMsg() {
+        std::cout << "Sent: UnitCreate: id: " << this->id.get() << " x: " << this->x.get() << " y: " << this->y.get() << " tribeIndex: " << this->tribeIndex.get() << " templateIndex: " << this->templateIndex.get() << std::endl;
+    }
+
     ////////////////////////////////////////////////////////
 
     ConstructionQueueMsgV1::ConstructionQueueMsgV1(const Array& fromArray) {
@@ -409,6 +449,19 @@ namespace DsprMessage
                 default:
                     int i = 10;//blah... :(
             }
+        }
+    }
+
+    void ConstructionQueueMsgV1::PrintMsg()
+    {
+        std::cout << " cq:";
+        if (this->buildTime.getWasSet())
+            std::cout << " buildTime: " << this->buildTime.get();
+        if (this->queue.getWasSet())
+        {
+            std::cout << " queue: ";
+            for(int i=0;i<queue.size();i++)
+                std::cout << "," << this->queue.get(i);
         }
     }
 
@@ -511,6 +564,31 @@ namespace DsprMessage
         return true;
     }
 
+    void UnitUpdateMsgV1::PrintMsg() {
+        std::cout << "Sent: UnitUpdate: id: " << this->id.get();
+        if (this->nextPosition.getWasSet()) std::cout << " nextPosition: " << this->nextPosition.get(0) << "," << this->nextPosition.get(1);
+        if (this->moveTarget.getWasSet()) std::cout << " moveTarget: " << this->moveTarget.get(0) << "," << this->moveTarget.get(1);
+        if (this->animationState.getWasSet()) std::cout << " animationState: " << this->animationState.get(0) << "," << this->animationState.get(1);
+        if (this->health.getWasSet()) std::cout << " health: " << this->health.get();
+        if (this->bleed.getWasSet()) std::cout << " bleed: " << this->bleed.get();
+        if (this->targetUnitId.getWasSet()) std::cout << " targetUnitId: " << this->targetUnitId.get();
+        if (this->gatherYield.getWasSet()) std::cout << " gatherYield: " << this->gatherYield.get(0) << "," << this->gatherYield.get(1);
+        if (this->constructionQueue.getWasSet()) {
+            ConstructionQueueMsgV1 constructionQueueMsgV1 = ConstructionQueueMsgV1(this->constructionQueue);
+            constructionQueueMsgV1.PrintMsg();
+        }
+        if (this->rallyPoint.getWasSet()) std::cout << " rallyPoint: " << this->rallyPoint.get(0) << "," << this->rallyPoint.get(1);
+        if (this->rallyUnitId.getWasSet()) std::cout << " rallyUnitId: " << this->rallyUnitId.get();
+        if (this->inventory.getWasSet()){
+            std::cout << " inventory: ";
+            for(int i = 0;i<this->inventory.size();i++)
+            {
+                std::cout << "," << this->inventory.get(i);
+            }
+        }
+        std::cout << std::endl;
+    }
+
     ////////////////////////////////////////////////////////
 
     UnitDeleteMsgV1::UnitDeleteMsgV1(const Array& fromArray) {
@@ -544,9 +622,16 @@ namespace DsprMessage
         }
     }
 
+    void UnitDeleteMsgV1::PrintMsg() {
+        std::cout << "Sent: UnitDelete: id: " << this->id.get() << " bleed: " << this->dead.get();
+    }
+
     ////////////////////////////////////////////////////////
 
     std::shared_ptr<DsprMessage::ToClientMsg> ToClientSubMessage::getToClientMessage() {
+
+        this->PrintMsg();
+
         std::shared_ptr<CStr> serializedUnitUpdateMsg = this->Serialize();
         DsprMessage::ToClientMsg* clientMsg = new DsprMessage::ToClientMsg();
         assert(DsprMessage::ToClientMsg::MessageType::MessageTypeMaxValue < DsprMessage::MaxByteValue);
