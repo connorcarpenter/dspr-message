@@ -39,6 +39,8 @@ namespace DsprMessage {
 
         void loadFromCharPtr(const char *cstr, int size);
 
+        void setWasSet(bool newWasSetValue);
+
     private:
 
         //Array(const Array&) = delete;

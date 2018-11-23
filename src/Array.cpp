@@ -150,4 +150,8 @@ namespace DsprMessage{
 
         return msgString;
     }
+
+    void Array::setWasSet(bool newWasSetValue) {
+        this->wasSet = newWasSetValue;
+    }
 }
