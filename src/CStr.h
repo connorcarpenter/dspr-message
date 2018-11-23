@@ -24,6 +24,7 @@ namespace DsprMessage
         void subtractAt(unsigned int amount, unsigned int index);
         unsigned char size();
         unsigned char* getCharPtr();
+        std::unique_ptr<CStr> getCopy();
 
     private:
 

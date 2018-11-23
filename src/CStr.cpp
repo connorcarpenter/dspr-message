@@ -59,4 +59,13 @@ namespace DsprMessage
     void CStr::subtractAt(unsigned int amount, unsigned int index) {
         this->innerCstr[index] -= amount;
     }
+
+    std::unique_ptr<CStr> CStr::getCopy() {
+        auto otherStr = new unsigned char[this->number];
+        for(int i=0;i<this->number;i++)
+            otherStr[i] = at(i);
+        auto newCStr = CStr::make_cstr(otherStr, this->number);
+        delete [] otherStr;
+        return newCStr;
+    }
 }

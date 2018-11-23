@@ -40,6 +40,7 @@ namespace DsprMessage
         {
             cstr->subtractAt(DsprMessage::Modifier, i);
         }
+
 //        if (cstr->at(cstr->size()-1) == DsprMessage::EscapeCharacter)
 //        {
 //            cstr->subtractAt(DsprMessage::EscapeCharacter, cstr->size()-1);
