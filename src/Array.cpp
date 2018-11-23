@@ -125,6 +125,15 @@ namespace DsprMessage{
         }
     }
 
+    void Array::loadFromCharPtr(const char* cstr, int size) {
+        this->contents.clear();
+        this->wasSet = true;
+        for(int i=0;i<size;i++)
+        {
+            this->contents.push_back(cstr[i]);
+        }
+    }
+
     std::shared_ptr<std::string> Array::toStdString() {
         int newSize = this->size()+1;
         auto output = new char[newSize];

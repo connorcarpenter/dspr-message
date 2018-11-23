@@ -37,6 +37,8 @@ namespace DsprMessage {
 
         std::shared_ptr<std::string> toStdString();
 
+        void loadFromCharPtr(const char *cstr, int size);
+
     private:
 
         //Array(const Array&) = delete;
@@ -46,5 +48,6 @@ namespace DsprMessage {
         unsigned int dataSize = 1;
         std::vector<unsigned int> contents;
         bool wasSet = false;
+
     };
 }
