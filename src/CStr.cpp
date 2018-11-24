@@ -43,6 +43,11 @@ namespace DsprMessage
         for(int i=0;i<this->number;i++)
         {
             this->innerCstr[i] = pVector->at(i);
+
+            if (pVector->at(i) < 0)
+            {
+                int i = 1;
+            }
         }
     }
 

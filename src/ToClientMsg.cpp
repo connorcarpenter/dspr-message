@@ -84,12 +84,12 @@ namespace DsprMessage
 
         ///TODO: MAKE THIS WORK FOR ALL TYPES OF MESSAGES!
 
-//        UnitUpdateMsgV1 aUU = UnitUpdateMsgV1(a.msgBytes);
-//        UnitUpdateMsgV1 bUU = UnitUpdateMsgV1(b.msgBytes);
-//        if (!UnitUpdateMsgV1::Equals(aUU, bUU))
-//        {
-//            return false;
-//        }
+        UnitUpdateMsgV1 aUU = UnitUpdateMsgV1(a.msgBytes);
+        UnitUpdateMsgV1 bUU = UnitUpdateMsgV1(b.msgBytes);
+        if (!UnitUpdateMsgV1::Equals(aUU, bUU))
+        {
+            return false;
+        }
 
         ///TODO: MAKE THIS WORK FOR ALL TYPES OF MESSAGES!
 
@@ -533,7 +533,9 @@ namespace DsprMessage
                     index = this->inventory.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    auto realstr = fromString.get();
+                    int i = 12;
+                    break;
             }
         }
     }
@@ -623,7 +625,48 @@ namespace DsprMessage
     }
 
     void UnitDeleteMsgV1::PrintMsg() {
-        std::cout << "Sent: UnitDelete: id: " << this->id.get() << " bleed: " << this->dead.get();
+        std::cout << "Sent: UnitDelete: id: " << this->id.get() << " bleed: " << this->dead.get() << std::endl;
+    }
+
+    //////////////////////////////////////////////////////////////
+
+    ProjectileCreateMsgV1::ProjectileCreateMsgV1(const Array &fromArray) {
+        this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
+    }
+
+    std::shared_ptr<DsprMessage::CStr> ProjectileCreateMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->from.serialize(charVector);
+        this->to.serialize(charVector);
+        this->index.serialize(charVector);
+
+        return CStr::make_cstr(charVector);
+    }
+
+    void ProjectileCreateMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::From:
+                    index = this->from.deserialize(index+1, fromString);
+                    break;
+                case VariableName::To:
+                    index = this->to.deserialize(index+1, fromString);
+                    break;
+                case VariableName::Index:
+                    index = this->index.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
+    }
+
+    void ProjectileCreateMsgV1::PrintMsg() {
+        std::cout << "Sent: ProjectileCreate: (" << this->from.get(0) << "," << this->from.get(1) << ")->(" << this->to.get(0) << "," << this->to.get(1) << "), index: " << this->index.get() << std::endl;
     }
 
     ////////////////////////////////////////////////////////
@@ -640,12 +683,14 @@ namespace DsprMessage
 
         //and, quickly test it comin back out again
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
-//        DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Pack());
-//
-//        if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
-//        {
-//            int i = 12; //:(
-//        }
+        if (clientMsg->msgType.get() == DsprMessage::ToClientMsg::MessageType::UnitUpdate) {
+            DsprMessage::ToClientMsg testMsg = DsprMessage::ToClientMsg(clientMsg->Pack());
+
+            if (!DsprMessage::ToClientMsg::Equals(*clientMsg, testMsg))
+            {
+                int i = 12; //:(
+            }
+        }
         ////TODO: REMOVE THIS FOR PRODUCTION!!!!
 
         return std::shared_ptr<DsprMessage::ToClientMsg>(clientMsg);

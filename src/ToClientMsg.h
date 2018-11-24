@@ -40,7 +40,8 @@ namespace DsprMessage
             UnitUpdate = 9,
             UnitDelete = 10,
             AuthGameToken = 11,
-            MessageTypeMaxValue = 12,
+            ProjectileCreate = 12,
+            MessageTypeMaxValue = 13,
         };
 
         Number msgType = Number((unsigned char) VariableName::MsgType);
@@ -419,5 +420,36 @@ namespace DsprMessage
         void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
 
         DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::UnitDelete;};
+    };
+
+    /////////////////////////////////////////////////////////////////////////
+
+    class ProjectileCreateMsgV1 : public ToClientSubMessage
+    {
+    public:
+
+        ProjectileCreateMsgV1() = default;
+
+        //Serialization
+        ProjectileCreateMsgV1(const Array& fromArray);
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
+
+        //Variables
+        enum VariableName
+        {
+            From = 1,
+            To = 2,
+            Index = 3,
+        };
+        Array from = Array(VariableName::From);
+        Array to = Array(VariableName::To);
+        Number index = Number(VariableName::Index);
+
+    private:
+
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::ProjectileCreate;};
     };
 }
