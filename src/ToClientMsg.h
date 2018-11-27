@@ -39,9 +39,10 @@ namespace DsprMessage
             UnitCreate = 8,
             UnitUpdate = 9,
             UnitDelete = 10,
-            AuthGameToken = 11,
-            ProjectileCreate = 12,
-            MessageTypeMaxValue = 13,
+            UnitSpecialAction = 11,
+            AuthGameToken = 12,
+            ProjectileCreate = 13,
+            MessageTypeMaxValue = 14,
         };
 
         Number msgType = Number((unsigned char) VariableName::MsgType);
@@ -391,6 +392,35 @@ namespace DsprMessage
         void Deserialize(std::shared_ptr<CStr> fromString);
 
         virtual DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::UnitUpdate; }
+    };
+
+    /////////////////////////////////////////////////////////////////////////
+
+    class UnitSpecialActionMsgV1 : public ToClientSubMessage
+    {
+    public:
+
+        UnitSpecialActionMsgV1() = default;
+
+        //Serialization
+        UnitSpecialActionMsgV1(const Array& fromArray);
+        std::shared_ptr<DsprMessage::CStr> Serialize() override;
+        void PrintMsg() override;
+
+        //Variables
+        enum VariableName
+        {
+            Id = 1,
+            ActionIndex = 2,
+        };
+        Number id = Number(VariableName::Id);
+        Number actionIndex = Number(VariableName::ActionIndex);
+
+    private:
+
+        void Deserialize(std::shared_ptr<DsprMessage::CStr> fromString);
+
+        DsprMessage::ToClientMsg::MessageType getMessageType() override { return DsprMessage::ToClientMsg::MessageType::UnitSpecialAction;};
     };
 
     /////////////////////////////////////////////////////////////////////////

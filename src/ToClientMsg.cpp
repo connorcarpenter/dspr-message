@@ -671,6 +671,43 @@ namespace DsprMessage
 
     ////////////////////////////////////////////////////////
 
+    UnitSpecialActionMsgV1::UnitSpecialActionMsgV1(const Array &fromArray) {
+        this->Deserialize(DsprMessage::CStr::make_cstr(fromArray));
+    }
+
+    std::shared_ptr<DsprMessage::CStr> UnitSpecialActionMsgV1::Serialize() {
+        std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
+        this->id.serialize(charVector);
+        this->actionIndex.serialize(charVector);
+
+        return CStr::make_cstr(charVector);
+    }
+
+    void UnitSpecialActionMsgV1::Deserialize(std::shared_ptr<DsprMessage::CStr> fromString) {
+        int index = 0;
+        while(index < fromString->size())
+        {
+            char name = fromString->at(index);
+            switch(name)
+            {
+                case VariableName::Id:
+                    index = this->id.deserialize(index+1, fromString);
+                    break;
+                case VariableName::ActionIndex:
+                    index = this->actionIndex.deserialize(index+1, fromString);
+                    break;
+                default:
+                    int i = 10;//blah... :(
+            }
+        }
+    }
+
+    void UnitSpecialActionMsgV1::PrintMsg() {
+        std::cout << "Sent: UnitSpecialAction: id:" << this->id.get() << ", actionIndex: " << this->actionIndex.get() << std::endl;
+    }
+
+    ////////////////////////////////////////////////////////
+
     std::shared_ptr<DsprMessage::ToClientMsg> ToClientSubMessage::getToClientMessage() {
 
         this->PrintMsg();
@@ -695,4 +732,6 @@ namespace DsprMessage
 
         return std::shared_ptr<DsprMessage::ToClientMsg>(clientMsg);
     }
+
+
 }
