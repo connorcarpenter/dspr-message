@@ -149,8 +149,10 @@ namespace DsprMessage
         enum VariableName
         {
             TribeIndex = 1,
+            Status = 2
         };
         Number tribeIndex = Number(VariableName::TribeIndex);
+        Number status = Number(VariableName::Status);
 
     private:
 

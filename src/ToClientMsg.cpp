@@ -190,6 +190,7 @@ namespace DsprMessage
     std::shared_ptr<DsprMessage::CStr> TribeSetMsgV1::Serialize() {
         std::shared_ptr<CharVector> charVector = CharVector::make_charVector();
         this->tribeIndex.serialize(charVector);
+        this->status.serialize(charVector);
 
         return CStr::make_cstr(charVector);
     }
@@ -204,6 +205,9 @@ namespace DsprMessage
                 case VariableName::TribeIndex:
                     index = this->tribeIndex.deserialize(index+1, fromString);
                     break;
+                case VariableName::Status:
+                    index = this->status.deserialize(index+1, fromString);
+                    break;
                 default:
                     int i = 10;//blah... :(
             }
@@ -211,7 +215,7 @@ namespace DsprMessage
     }
 
     void TribeSetMsgV1::PrintMsg() {
-        std::cout << "Sent: TribeSet: index: " << this->tribeIndex.get() << std::endl;
+        std::cout << "Sent: TribeSet: index: " << this->tribeIndex.get() << ", status: " << this->status.get() << std::endl;
     }
 
     ////////////////////////////////////////////////
