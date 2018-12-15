@@ -1,9 +1,9 @@
 #include <vector>
 #include "ToClientMsg.h"
 #include "Main.h"
+#include "msg_debug.h"
 #include <string>
 #include <assert.h>
-#include <iostream>
 
 namespace DsprMessage
 {
@@ -68,8 +68,8 @@ namespace DsprMessage
                 }
                     break;
                 default: {
-                    int i = 10;//blah... :(
                     index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
                 }
                     break;
             }
@@ -124,7 +124,8 @@ namespace DsprMessage
                     index = this->chatMsg.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -165,7 +166,8 @@ namespace DsprMessage
                     index = this->popMax.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -209,7 +211,8 @@ namespace DsprMessage
                     index = this->status.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -250,7 +253,8 @@ namespace DsprMessage
                     index = this->frame.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -287,7 +291,8 @@ namespace DsprMessage
                     index = this->height.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -332,7 +337,8 @@ namespace DsprMessage
                     index = this->templateIndex.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -365,7 +371,8 @@ namespace DsprMessage
                     index = this->id.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -414,7 +421,8 @@ namespace DsprMessage
                     index = this->templateIndex.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -451,7 +459,8 @@ namespace DsprMessage
                     index = this->queue.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -537,8 +546,8 @@ namespace DsprMessage
                     index = this->inventory.deserialize(index+1, fromString);
                     break;
                 default:
-                    auto realstr = fromString.get();
-                    int i = 12;
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
                     break;
             }
         }
@@ -623,7 +632,8 @@ namespace DsprMessage
                     index = this->dead.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -664,7 +674,8 @@ namespace DsprMessage
                     index = this->index.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -701,7 +712,8 @@ namespace DsprMessage
                     index = this->actionIndex.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -736,6 +748,4 @@ namespace DsprMessage
 
         return std::shared_ptr<DsprMessage::ToClientMsg>(clientMsg);
     }
-
-
 }

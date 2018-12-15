@@ -4,6 +4,7 @@
 
 #include "ToServerMsg.h"
 #include "Main.h"
+#include "msg_debug.h"
 
 namespace DsprMessage
 {
@@ -72,8 +73,8 @@ namespace DsprMessage
                 }
                     break;
                 default: {
-                    int i = 10;//blah... :(
                     index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
                 }
                     break;
             }
@@ -104,7 +105,8 @@ namespace DsprMessage
                     index = this->chatMsg.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
@@ -141,7 +143,8 @@ namespace DsprMessage
                     index = this->otherNumbers.deserialize(index+1, fromString);
                     break;
                 default:
-                    int i = 10;//blah... :(
+                    index = fromString->size();
+                    DBG_LOG(DEBUG_WASM_ERR, fromString.get());
             }
         }
     }
